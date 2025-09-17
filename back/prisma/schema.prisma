@@ -1,0 +1,423 @@
+generator client {
+    provider = "prisma-client-js"
+    // output   = "../src/generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// ------------------------------- ENUMS
+
+enum Gender {
+    MALE
+    FEMALE
+}
+
+enum Tempo {
+    SLOW // e.g., 4-2-1-0
+    MODERATE // e.g., 2-0-2-0
+    FAST // e.g., 1-0-1-0
+    CONTROLLED // focus on strict form
+    EXPLOSIVE // used in power training (0-0-X-0)
+}
+
+enum Intensity {
+    VERY_LOW // recovery / mobility work
+    LOW // ~40-60% effort
+    MODERATE // ~60-75% effort
+    HIGH // ~75-90% effort
+    MAXIMAL // ~90-100% effort
+}
+
+enum TrainingGoal {
+    FAT_LOSS
+    HYPERTROPHY
+    PERFORMANCE
+    OVER_ALL_HEALTH
+}
+
+enum StaticPostureDistortion {
+    PES_PLANUS_DISTORTION
+    LOWER_CROSSED
+    UPPER_CROSSED
+}
+
+enum PushingPullingPostureDistortion {
+    LOW_BACK_ARCHES
+    SHOULDERS_ELEVATE
+    HEAD_JUTS_FORWARD
+}
+
+enum OverheadSquatPostureDistortion {
+    FEET_TURN_OUT
+    KNEES_CAVE_IN
+    FORWARD_LEAN
+    LOW_BACK_ARCHES
+    ARMS_FALL_FORWARD
+}
+
+enum SingleSquatPostureDistortion {
+    KNEE_CAVES_INWARD
+}
+
+enum DegreeLevel {
+    LOW
+    MEDIUM
+    HIGH
+}
+
+enum TrainingLevel {
+    STABILIZATION // LEVEL 1
+    STRENGTH // LEVEL 2
+    POWER // LEVEL 3
+}
+
+enum TrainingPhase {
+    STABILIZATION_ENDURANCE // PHASE 1
+    STRENGTH_ENDURANCE // PHASE 2
+    HYPERTROPHY // PHASE 3
+    MAXIMAL_STRENGTH // PHASE 4
+    POWER // PHASE 5
+}
+
+enum TrainingFocus {
+    FLEXIBILITY
+    CARDIO
+    CORE
+    BALANCE
+    PLYOMETRIC
+    SAQ // Speed, Agility, Quickness
+    RESISTANCE
+}
+
+enum FitnessLevel {
+    DECONDITIONED
+    BEGINNER
+    INTERMEDIATE
+    ADVANCED
+    ELITE
+}
+
+enum ExerciseType {
+    WORM_UP
+    ACTIVATION
+    SKILL_DEVELOPMENT
+    RESISTANCE
+    COOL_DOWN
+}
+
+enum Muscle {
+    // --- Upper Body
+    CHEST
+    UPPER_CHEST
+    LOWER_CHEST
+    BACK
+    LATS
+    TRAPS
+    RHOMBOIDS
+    REAR_DELTS
+    FRONT_DELTS
+    SIDE_DELTS
+    BICEPS
+    TRICEPS
+    FOREARMS
+
+    // --- Core
+    ABDOMINALS
+    OBLIQUES
+    TRANSVERSE_ABS
+    ERECTOR_SPINAE
+
+    // --- Lower Body
+    GLUTES
+    QUADRICEPS
+    HAMSTRINGS
+    ADDUCTORS
+    ABDUCTORS
+    CALVES
+    TIBIALIS_ANTERIOR
+
+    // --- Neck
+    NECK_FLEXORS
+    NECK_EXTENSORS
+}
+
+enum InjuryType {
+    ANKLE_SPRRAIN
+    KNEE_INJURY
+    HIP_INJURY
+    SHOULDER_INJURY
+    ELBOW_INJURY
+    WRIST_INJURY
+    LOWER_BACK_PAIN
+    NECK_PAIN
+    OTHER
+}
+
+enum SurgeryType {
+    ACL_RECONSTRUCTION
+    MENISCUS_REPAIR
+    SHOULDER_LABRUM
+    ROTATOR_CUFF
+    SPINAL_SURGERY
+    HIP_REPLACEMENT
+    KNEE_REPLACEMENT
+    CARDIAC_SURGERY
+    OTHER
+}
+
+enum ChronicDiseaseType {
+    DIABETES
+    HYPERTENSION
+    ASTHMA
+    CARDIOVASCULAR_DISEASE
+    ARTHRITIS
+    OSTEOPOROSIS
+    OBESITY
+    CANCER
+    OTHER
+}
+
+enum MedicationType {
+    BLOOD_PRESSURE_MEDICATION
+    DIABETES_MEDICATION
+    CHOLESTEROL_MEDICATION
+    ASTHMA_INHALER
+    PAIN_RELIEVERS
+    ANTI_DEPRESSANTS
+    ANTI_INFLAMMATORY
+    OTHER
+}
+
+// ------------------------------- THE ATHLETE DETAILS
+
+model Athlete {
+    id     Int     @id @default(autoincrement())
+    name   String?
+    email  String? @unique
+    phone  String? @unique
+    age    Int?
+    height Float?
+    gender Gender?
+
+    physician_name          String?
+    physician_phone         String?
+    emergency_contact_name  String?
+    emergency_contact_phone String?
+
+    medical_and_health_history MedicalAndHealthHistory[]
+    assessments                Assessment[]
+    WorkoutSessions            WorkoutSession[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// ------------------------------- THE ASSESSEMENT
+
+model Assessment {
+    id        Int      @id @default(autoincrement())
+    Athlete   Athlete? @relation(fields: [athleteId], references: [id])
+    athleteId Int?
+
+    // -------------- Basic Measures
+    weight   Float?
+    body_fat Float?
+
+    // ------------- Vitals
+    resting_heart_rate       Int?
+    vo2_max                  Float?
+    blood_pressure_systolic  Int?
+    blood_pressure_diastolic Int?
+
+    // ------------- Movement Screening
+    static           StaticPostureDistortion[]
+    overhead_squat   OverheadSquatPostureDistortion[]
+    pushing          PushingPullingPostureDistortion[]
+    pulling          PushingPullingPostureDistortion[]
+    single_leg_squat SingleSquatPostureDistortion[]
+
+    // -------------  Performance (Optional)
+    push_up_1_minute_test                Int?
+    bench_press_one_rep_maximum_strength Float?
+    vertical_jump_reach                  Float?
+    long_jump_distance                   Float?
+    lower_extremity_functional_duration  Float?
+    the_40_yard_dash_duration            Float?
+    pro_shuttle_duration                 Float?
+
+    // ------------ Fitness level classification
+    fitness_level FitnessLevel?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model MedicalAndHealthHistory {
+    id        Int      @id @default(autoincrement())
+    Athlete   Athlete? @relation(fields: [athleteId], references: [id])
+    athleteId Int?
+
+    past_injuries   InjuryType[]
+    past_surgeries  SurgeryType[]
+    chronic_disease ChronicDiseaseType[]
+    medications     MedicationType[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// model LifestyleHabits {
+//     id Int @id @default(autoincrement())
+
+//     // Exercise Habits
+//     currently_active     Boolean?
+//     activity_history     String? // e.g. "5 years running, 2 years gym"
+//     preferred_activities String? // e.g. "running, weightlifting"
+//     frequency_per_week   Int? // e.g. "3x/week"
+//     duration_minutes     Int?
+//     intensity            Intensity?
+//     goal                 TrainingGoal[] // JSON string or key:value of outcome ratings
+
+//     // Dietary Habits
+//     diet_health_rating Int? // 0–10
+//     current_diet       String? // e.g. "keto, vegan, none"
+//     salt_intake        DegreeLevel?
+//     sugar_intake       DegreeLevel?
+//     fat_intake         DegreeLevel?
+//     junk_food_control  Int? // 0–10
+//     alcohol_per_week   Int?
+//     smoke              Boolean?
+//     caffeine_per_week  Int?
+
+//     // Sleep
+//     sleep_hours   Int?
+//     sleep_quality DegreeLevel?
+
+//     // Stress
+//     stress_level      Int? // 0–10
+//     stress_sources    String?
+//     stress_management String?
+
+//     // Occupation
+//     occupation_title     String?
+//     occupation_nature    String? // e.g. "desk job, manual labor"
+//     standing_hours       Int?
+//     sitting_hours        Int?
+//     repetitive_movements Boolean?
+
+//     // Recreation & Hobbies
+//     recreational_activities String? // e.g. "golf, dancing"
+//     hobbies                 String? // e.g. "gardening, music"
+
+//     // 1 to 1 relationship
+//     assessement  Assessment? @relation(fields: [AssessmentId], references: [id])
+//     AssessmentId Int?        @unique
+// }
+
+// ------------------------------- ONE SESSION BTREAKDOWN
+
+model ExerciseFormat {
+    id    Int             @id @default(autoincrement())
+    name  String
+    focus TrainingFocus[]
+
+    image String?
+    video String?
+
+    primary_muscles    Muscle[] // agonist 
+    secondary_muscles  Muscle[] //  Synergists
+    stabilizer_muscles Muscle[] //  Stabilizers
+    opposite_muscles   Muscle[] //  Antagonists
+
+    appropriate_fitness_level   FitnessLevel
+    appropriate_training_phases TrainingPhase[]
+
+    Exercise Exercise[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Exercise {
+    id               Int            @id @default(autoincrement())
+    exercise_format  ExerciseFormat @relation(fields: [exerciseFormatId], references: [id])
+    exerciseFormatId Int
+
+    exercise_type ExerciseType
+
+    set        Int?
+    repetition Int?
+    tempo      Tempo?
+    rest       Int        @default(30) // in seconds
+    intensity  Intensity?
+
+    WorkoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
+    workoutSessionId Int?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// ------------------------------- TRAINING PLAN BTREAKDOWN
+
+model Macrocycle {
+    id        Int      @id @default(autoincrement())
+    name      String
+    startDate DateTime
+    endDate   DateTime
+
+    mesocycles Mesocycle[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Mesocycle {
+    id        Int      @id @default(autoincrement())
+    startDate DateTime
+    endDate   DateTime
+
+    macrocycle   Macrocycle @relation(fields: [macrocycleId], references: [id])
+    macrocycleId Int
+
+    microcycles Microcycle[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Microcycle {
+    id        Int      @id @default(autoincrement())
+    startDate DateTime
+    endDate   DateTime
+
+    mesocycle   Mesocycle @relation(fields: [mesocycleId], references: [id])
+    mesocycleId Int
+
+    workoutSessions WorkoutSession[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model WorkoutSession {
+    id   Int      @id @default(autoincrement())
+    date DateTime
+
+    athlete   Athlete @relation(fields: [athleteId], references: [id])
+    athleteId Int
+
+    microcycle   Microcycle @relation(fields: [microcycleId], references: [id])
+    microcycleId Int
+
+    training_level TrainingLevel?
+    training_phase TrainingPhase?
+
+    exercises Exercise[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

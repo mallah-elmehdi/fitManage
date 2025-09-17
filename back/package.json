@@ -1,0 +1,24 @@
+{
+    "dependencies": {
+        "@prisma/client": "^6.16.0",
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.2",
+        "express": "^5.1.0",
+        "http-status-codes": "^2.3.0",
+        "method-override": "^3.0.0",
+        "pg": "^8.16.3"
+    },
+    "name": "back",
+    "module": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "bun --watch index.js"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "prisma": "^6.16.0"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    }
+}
