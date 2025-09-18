@@ -145,7 +145,7 @@ enum Muscle {
 }
 
 enum InjuryType {
-    ANKLE_SPRRAIN
+    ANKLE_SPRAIN
     KNEE_INJURY
     HIP_INJURY
     SHOULDER_INJURY
@@ -207,9 +207,10 @@ model Athlete {
     emergency_contact_name  String?
     emergency_contact_phone String?
 
-    medical_and_health_history MedicalAndHealthHistory[]
-    assessments                Assessment[]
-    WorkoutSessions            WorkoutSession[]
+    medical_and_health_histories MedicalAndHealthHistory[]
+    assessments                  Assessment[]
+
+    WorkoutSessions WorkoutSession[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -249,7 +250,7 @@ model Assessment {
     pro_shuttle_duration                 Float?
 
     // ------------ Fitness level classification
-    fitness_level FitnessLevel?
+    fitness_level FitnessLevel
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

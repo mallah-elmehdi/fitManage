@@ -1,13 +1,13 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { GENDER } from '~/lib/enums';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
-import { toast } from 'sonner';
-import axios from 'axios';
+import { GENDER } from '~/lib/enums';
 
 const formSchema = z.object({
     name: z.string().nonempty().min(2, {
@@ -23,9 +23,11 @@ const formSchema = z.object({
     gender: z.enum(Object.keys(GENDER)),
 });
 
+type AthleteFormValues = z.infer<typeof formSchema>;
+
 export function AddAthleteForm() {
     // 1. Define your form.
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<AthleteFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: '',
@@ -41,10 +43,13 @@ export function AddAthleteForm() {
         axios
             .post('http://localhost:9090/athlete/init', { ...values, age: parseInt(values.age) })
             .then((response) => {
-                toast(response.data.message);
+                toast.success(response.data.message);
+                setTimeout(() => {
+                    document.location.reload();
+                }, 1000);
             })
             .catch((error) => {
-                toast(error.message);
+                toast.error(error.message);
             })
             .finally(() => {});
     }

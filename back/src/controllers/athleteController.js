@@ -1,8 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import athleteService from '../services/athleteService';
-
-const prisma = new PrismaClient();
 
 const { createInitAthleteService, getAllAthletesService, getAthleteByIdService } = athleteService;
 

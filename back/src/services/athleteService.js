@@ -30,6 +30,11 @@ const getAthleteByIdService = async (id) => {
                         createdAt: 'desc',
                     },
                 },
+                medical_and_health_histories: {
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                },
             },
         });
     } catch (error) {

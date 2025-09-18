@@ -10,7 +10,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { Info, MoreHorizontal, Plus, Trash } from 'lucide-react';
+import { MoreHorizontal, Plus, Trash } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { Badge } from '~/components/ui/badge';
@@ -18,46 +18,38 @@ import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
-import {
-    FITNESS_LEVEL,
-    OVERHEAD_SQUAT_POSTURE_DISTORTION,
-    PUSHING_PULLING_POSTURE_DISTORTION,
-    SINGLE_SQUAT_POSTURE_DISTORTION,
-    STATIC_POSTURE_DISTORTION,
-} from '~/lib/enums';
+import { CHRONIC_DISEASE_TYPE, INJURY_TYPE, MEDICATION_TYPE, SURGERY_TYPE } from '~/lib/enums';
 import { dateFormatting } from '~/lib/funs';
-import AddAssessmentForm from './add_assessment_form';
+import AddMedicalAndHealthHistoryForm from './add_medical_and_health_history_form';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-export type Assessment = {
+export type MedicalAndHealthHistory = {
     id: number;
-    static: STATIC_POSTURE_DISTORTION[];
-    overhead_squat: OVERHEAD_SQUAT_POSTURE_DISTORTION[];
-    pushing: PUSHING_PULLING_POSTURE_DISTORTION[];
-    pulling: PUSHING_PULLING_POSTURE_DISTORTION[];
-    single_leg_squat: SINGLE_SQUAT_POSTURE_DISTORTION[];
-    fitness_level?: FITNESS_LEVEL | null;
+    past_injuries: INJURY_TYPE[];
+    past_surgeries: SURGERY_TYPE[];
+    chronic_disease: CHRONIC_DISEASE_TYPE[];
+    medications: MEDICATION_TYPE[];
     createdAt: string;
 };
 
-export const columns: ColumnDef<Assessment>[] = [
+export const columns: ColumnDef<MedicalAndHealthHistory>[] = [
     {
         accessorKey: 'createdAt',
         header: 'Assessment date',
         cell: ({ row }) => <div className="capitalize">{dateFormatting(row.getValue('createdAt'))}</div>,
     },
     {
-        accessorKey: 'static',
-        header: 'Static',
+        accessorKey: 'past_injuries',
+        header: 'Past injuries',
         cell: ({ row }) => {
-            const _static = row.getValue('static');
-            const static_data = Array.isArray(_static) ? _static : [];
+            const past_injuries = row.getValue('past_injuries');
+            const past_injuries_data = Array.isArray(past_injuries) ? past_injuries : [];
             return (
-                <div className="flex gap-1 wrap flex-col">
-                    {static_data.length > 0
-                        ? static_data.map((item: keyof typeof STATIC_POSTURE_DISTORTION) => {
-                              return <Badge>{STATIC_POSTURE_DISTORTION[item]}</Badge>;
+                <div className="flex gap-1 wrap  flex-col">
+                    {past_injuries_data.length > 0
+                        ? past_injuries_data.map((item: keyof typeof INJURY_TYPE) => {
+                              return <Badge>{INJURY_TYPE[item]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -65,16 +57,16 @@ export const columns: ColumnDef<Assessment>[] = [
         },
     },
     {
-        accessorKey: 'overhead_squat',
-        header: 'Overhead squat',
+        accessorKey: 'past_surgeries',
+        header: 'Past surgeries',
         cell: ({ row }) => {
-            const overhead_squat = row.getValue('overhead_squat');
-            const overhead_squat_data = Array.isArray(overhead_squat) ? overhead_squat : [];
+            const past_surgeries = row.getValue('past_surgeries');
+            const past_surgeries_data = Array.isArray(past_surgeries) ? past_surgeries : [];
             return (
-                <div className="flex gap-1 wrap flex-col">
-                    {overhead_squat_data.length > 0
-                        ? overhead_squat_data.map((item: keyof typeof OVERHEAD_SQUAT_POSTURE_DISTORTION) => {
-                              return <Badge>{OVERHEAD_SQUAT_POSTURE_DISTORTION[item]}</Badge>;
+                <div className="flex gap-1 wrap  flex-col">
+                    {past_surgeries_data.length > 0
+                        ? past_surgeries_data.map((item: keyof typeof SURGERY_TYPE) => {
+                              return <Badge>{SURGERY_TYPE[item]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -82,16 +74,16 @@ export const columns: ColumnDef<Assessment>[] = [
         },
     },
     {
-        accessorKey: 'pushing',
-        header: 'Pushing',
+        accessorKey: 'chronic_disease',
+        header: 'Chronic disease',
         cell: ({ row }) => {
-            const pushing = row.getValue('pushing');
-            const pushing_data = Array.isArray(pushing) ? pushing : [];
+            const chronic_disease = row.getValue('chronic_disease');
+            const chronic_disease_data = Array.isArray(chronic_disease) ? chronic_disease : [];
             return (
-                <div className="flex gap-1 wrap flex-col">
-                    {pushing_data.length > 0
-                        ? pushing_data.map((item: keyof typeof PUSHING_PULLING_POSTURE_DISTORTION) => {
-                              return <Badge>{PUSHING_PULLING_POSTURE_DISTORTION[item]}</Badge>;
+                <div className="flex gap-1 wrap  flex-col">
+                    {chronic_disease_data.length > 0
+                        ? chronic_disease_data.map((item: keyof typeof CHRONIC_DISEASE_TYPE) => {
+                              return <Badge>{CHRONIC_DISEASE_TYPE[item]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -99,45 +91,20 @@ export const columns: ColumnDef<Assessment>[] = [
         },
     },
     {
-        accessorKey: 'pulling',
-        header: 'Pulling',
+        accessorKey: 'medications',
+        header: 'Medications',
         cell: ({ row }) => {
-            const pulling = row.getValue('pulling');
-            const pulling_data = Array.isArray(pulling) ? pulling : [];
+            const medications = row.getValue('medications');
+            const medications_data = Array.isArray(medications) ? medications : [];
             return (
-                <div className="flex gap-1 wrap flex-col">
-                    {pulling_data.length > 0
-                        ? pulling_data.map((item: keyof typeof PUSHING_PULLING_POSTURE_DISTORTION) => {
-                              return <Badge>{PUSHING_PULLING_POSTURE_DISTORTION[item]}</Badge>;
+                <div className="flex gap-1 flex-wrap flex-col">
+                    {medications_data.length > 0
+                        ? medications_data.map((item: keyof typeof MEDICATION_TYPE) => {
+                              return <Badge>{MEDICATION_TYPE[item]}</Badge>;
                           })
                         : '-'}
                 </div>
             );
-        },
-    },
-    {
-        accessorKey: 'single_leg_squat',
-        header: 'Single leg squat',
-        cell: ({ row }) => {
-            const single_leg_squat = row.getValue('single_leg_squat');
-            const single_leg_squat_data = Array.isArray(single_leg_squat) ? single_leg_squat : [];
-            return (
-                <div className="flex gap-1 wrap flex-col">
-                    {single_leg_squat_data.length > 0
-                        ? single_leg_squat_data.map((item: keyof typeof SINGLE_SQUAT_POSTURE_DISTORTION) => {
-                              return <Badge>{SINGLE_SQUAT_POSTURE_DISTORTION[item]}</Badge>;
-                          })
-                        : '-'}
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: 'fitness_level',
-        header: 'Fitness Level',
-        cell: ({ row }) => {
-            const fitness_level: keyof typeof FITNESS_LEVEL = row.getValue('fitness_level');
-            return <Badge>{FITNESS_LEVEL[fitness_level]}</Badge>;
         },
     },
     {
@@ -149,7 +116,7 @@ export const columns: ColumnDef<Assessment>[] = [
 
             const deleteItem = () => {
                 axios
-                    .delete('http://localhost:9090/assessment/' + id)
+                    .delete('http://localhost:9090/medical-and-health-history/' + id, {})
                     .then((res) => {
                         toast.success(res.data.message);
                         setTimeout(() => {
@@ -169,10 +136,6 @@ export const columns: ColumnDef<Assessment>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigate('assessment/' + id)}>
-                            <Info className="text-primary" />
-                            Details
-                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={deleteItem}>
                             <Trash className="text-primary" />
                             Delete
@@ -184,7 +147,7 @@ export const columns: ColumnDef<Assessment>[] = [
     },
 ];
 
-const Assessments = ({ data }: { data: Assessment[] }) => {
+const MedicalAndHealthHistories = ({ data }: { data: MedicalAndHealthHistory[] }) => {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -215,15 +178,15 @@ const Assessments = ({ data }: { data: Assessment[] }) => {
                 <Dialog>
                     <DialogTrigger className="ml-auto">
                         <Button variant="outline">
-                            <Plus /> Add Assessment
+                            <Plus /> Add Medical And Health History Form
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="overflow-auto h-full">
+                    <DialogContent className="overflow-auto">
                         <DialogHeader>
-                            <DialogTitle>Add the assessment details</DialogTitle>
+                            <DialogTitle>Add the medical and health history form details</DialogTitle>
                             <DialogDescription>these are the basic info of the athlete</DialogDescription>
                         </DialogHeader>
-                        <AddAssessmentForm />
+                        <AddMedicalAndHealthHistoryForm />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -275,4 +238,4 @@ const Assessments = ({ data }: { data: Assessment[] }) => {
     );
 };
 
-export default Assessments;
+export default MedicalAndHealthHistories;

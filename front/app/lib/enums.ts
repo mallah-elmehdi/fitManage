@@ -100,3 +100,50 @@ export enum DEGREE_LEVEL {
     MEDIUM = 'Medium',
     HIGH = 'High',
 }
+
+export enum INJURY_TYPE {
+    ANKLE_SPRAIN = 'Ankle sprain',
+    KNEE_INJURY = 'Knee injury',
+    HIP_INJURY = 'Hip injury',
+    SHOULDER_INJURY = 'Shoulder injury',
+    ELBOW_INJURY = 'Elbow injury',
+    WRIST_INJURY = 'Wrist injury',
+    LOWER_BACK_PAIN = 'Lower back pain',
+    NECK_PAIN = 'Neck pain',
+    OTHER = 'Other',
+}
+
+export enum SURGERY_TYPE {
+    ACL_RECONSTRUCTION = 'Acl reconstruction',
+    MENISCUS_REPAIR = 'Meniscus repair',
+    SHOULDER_LABRUM = 'Shoulder labrum',
+    ROTATOR_CUFF = 'Rotator cuff',
+    SPINAL_SURGERY = 'Spinal surgery',
+    HIP_REPLACEMENT = 'Hip replacement',
+    KNEE_REPLACEMENT = 'Knee replacement',
+    CARDIAC_SURGERY = 'Cardiac surgery',
+    OTHER = 'Other',
+}
+
+export enum CHRONIC_DISEASE_TYPE {
+    DIABETES = 'Diabetes',
+    HYPERTENSION = 'Hypertension',
+    ASTHMA = 'Asthma',
+    CARDIOVASCULAR_DISEASE = 'Cardiovascular disease',
+    ARTHRITIS = 'Arthritis',
+    OSTEOPOROSIS = 'Osteoporosis',
+    OBESITY = 'Obesity',
+    CANCER = 'Cancer',
+    OTHER = 'Other',
+}
+
+export enum MEDICATION_TYPE {
+    BLOOD_PRESSURE_MEDICATION = 'Blood pressure medication',
+    DIABETES_MEDICATION = 'Diabetes medication',
+    CHOLESTEROL_MEDICATION = 'Cholesterol medication',
+    ASTHMA_INHALER = 'Asthma inhaler',
+    PAIN_RELIEVERS = 'Pain relievers',
+    ANTI_DEPRESSANTS = 'Anti depressants',
+    ANTI_INFLAMMATORY = 'Anti inflammatory',
+    OTHER = 'Other',
+}

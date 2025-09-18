@@ -1,5 +1,4 @@
-import React from 'react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '~/components/ui/table';
 
 type EmergencyType = {
     physician_name?: string;
@@ -10,29 +9,31 @@ type EmergencyType = {
 
 const Emergency = ({ physician_name, physician_phone, emergency_contact_name, emergency_contact_phone }: EmergencyType) => {
     return (
-        <Table className="w-full border-1 ">
-            <TableBody>
-                <TableRow>
-                    <TableHead>Physician name</TableHead>
-                    <TableCell>{physician_name || 'undefine'}</TableCell>
-                </TableRow>
+        <div className="border rounded-md">
+            <Table>
+                <TableBody>
+                    <TableRow>
+                        <TableHead>Physician name</TableHead>
+                        <TableCell>{physician_name || '-'}</TableCell>
+                    </TableRow>
 
-                <TableRow>
-                    <TableHead>Physician phone</TableHead>
-                    <TableCell>{physician_phone || 'undefine'}</TableCell>
-                </TableRow>
+                    <TableRow>
+                        <TableHead>Physician phone</TableHead>
+                        <TableCell>{physician_phone || '-'}</TableCell>
+                    </TableRow>
 
-                <TableRow>
-                    <TableHead>Emergency contact name</TableHead>
-                    <TableCell>{emergency_contact_name || 'undefine'}</TableCell>
-                </TableRow>
+                    <TableRow>
+                        <TableHead>Emergency contact name</TableHead>
+                        <TableCell>{emergency_contact_name || '-'}</TableCell>
+                    </TableRow>
 
-                <TableRow>
-                    <TableHead>Emergency contact phone</TableHead>
-                    <TableCell>{emergency_contact_phone || 'undefine'}</TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+                    <TableRow>
+                        <TableHead>Emergency contact phone</TableHead>
+                        <TableCell>{emergency_contact_phone || '-'}</TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </div>
     );
 };
 

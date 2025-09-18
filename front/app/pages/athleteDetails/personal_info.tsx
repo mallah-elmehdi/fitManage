@@ -9,29 +9,31 @@ type PersonalInfoType = {
 
 const PersonalInfo = ({ email, phone, age, gender }: PersonalInfoType) => {
     return (
-        <Table className="w-full border-1">
-            <TableBody>
-                <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableCell>{email}</TableCell>
-                </TableRow>
+        <div className="border rounded-md">
+            <Table>
+                <TableBody>
+                    <TableRow>
+                        <TableHead>Email</TableHead>
+                        <TableCell className="lowercase">{email}</TableCell>
+                    </TableRow>
 
-                <TableRow>
-                    <TableHead>phone</TableHead>
-                    <TableCell>{phone}</TableCell>
-                </TableRow>
+                    <TableRow>
+                        <TableHead>phone</TableHead>
+                        <TableCell className="lowercase">{phone}</TableCell>
+                    </TableRow>
 
-                <TableRow>
-                    <TableHead>age</TableHead>
-                    <TableCell>{age}</TableCell>
-                </TableRow>
+                    <TableRow>
+                        <TableHead>age</TableHead>
+                        <TableCell className="lowercase">{age}</TableCell>
+                    </TableRow>
 
-                <TableRow>
-                    <TableHead>gender</TableHead>
-                    <TableCell>{gender}</TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+                    <TableRow>
+                        <TableHead>gender</TableHead>
+                        <TableCell className="lowercase">{gender}</TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </div>
     );
 };
 
