@@ -124,14 +124,20 @@ const exerciseJsonDBSetUpService = async () => {
     }
 };
 
-const getAllExercisesWithPaginationService = async (page) => {
+const getAllExercisesWithPaginationService = async ({ page, name }) => {
     try {
-        const pageSize = 20;
+        const pageSize = 200;
         const skip = (page - 1) * pageSize;
 
         const exercises = await prisma.exerciseFormat.findMany({
             skip: skip,
             take: pageSize,
+            where: {
+                name: {
+                    contains: name,
+                    mode: 'insensitive',
+                },
+            },
             orderBy: {
                 createdAt: 'desc', // Or any other field for consistent ordering
             },

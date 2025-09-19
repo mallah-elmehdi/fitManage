@@ -402,7 +402,6 @@ model Exercise {
 
 model Macrocycle {
     id        Int      @id @default(autoincrement())
-    name      String
     startDate DateTime
     endDate   DateTime
 

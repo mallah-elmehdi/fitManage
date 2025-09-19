@@ -4,16 +4,10 @@ import { useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import ExerciseCard from '~/components/exercise-card';
 import { Input } from '~/components/ui/input';
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink
-} from '~/components/ui/pagination';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '~/components/ui/pagination';
 import { ExerciseFormatType } from '~/lib/types';
 
-type DataType = {
+export type AllExercisesDataType = {
     totalPages: number;
     currentPage: number;
     exercises: ExerciseFormatType[];
@@ -21,7 +15,7 @@ type DataType = {
 
 const ExercisesList = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [data, setData] = useState<DataType | undefined>(undefined);
+    const [data, setData] = useState<AllExercisesDataType | undefined>(undefined);
 
     const setThePageNumber = (page: string) => {
         setSearchParams((prevParams) => {

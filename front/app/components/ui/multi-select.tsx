@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { CheckIcon, XCircle, ChevronDown, XIcon, WandSparkles } from 'lucide-react';
+import { CheckIcon, XCircle, ChevronDown, XIcon, WandSparkles, Search } from 'lucide-react';
 
 import { cn } from '~/lib/utils';
 import { Separator } from '~/components/ui/separator';
@@ -253,6 +253,8 @@ interface MultiSelectProps
      * Optional, defaults to false.
      */
     closeOnSelect?: boolean;
+
+    SearchButton?: React.ElementType;
 }
 
 /**
@@ -308,6 +310,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
             deduplicateOptions = false,
             resetOnDefaultValueChange = true,
             closeOnSelect = false,
+            SearchButton,
             ...props
         },
         ref
@@ -918,14 +921,19 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                     >
                         <Command>
                             {searchable && (
-                                <CommandInput
-                                    placeholder="Search options..."
-                                    onKeyDown={handleInputKeyDown}
-                                    value={searchValue}
-                                    onValueChange={setSearchValue}
-                                    aria-label="Search through available options"
-                                    aria-describedby={`${multiSelectId}-search-help`}
-                                />
+                                <>
+                                    <div className="flex items-center gap-1 w-full">
+                                        <CommandInput
+                                            placeholder="Search options..."
+                                            onKeyDown={handleInputKeyDown}
+                                            value={searchValue}
+                                            onValueChange={setSearchValue}
+                                            aria-label="Search through available options"
+                                            aria-describedby={`${multiSelectId}-search-help`}
+                                        />
+                                        {SearchButton && <SearchButton search={searchValue} setSearch={setSearchValue} />}
+                                    </div>
+                                </>
                             )}
                             {searchable && (
                                 <div id={`${multiSelectId}-search-help`} className="sr-only">

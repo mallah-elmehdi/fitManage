@@ -1,6 +1,9 @@
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import TrainingSession from './training_session';
 
 const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const MonthlyWeeklyProgram = () => {
     return (
@@ -8,8 +11,23 @@ const MonthlyWeeklyProgram = () => {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="text-center  bg-secondary rounded-t-md" colSpan={29}>
-                            MONTHLY/WEEKLY PLAN
+                        <TableHead className="  bg-secondary rounded-t-md" colSpan={29}>
+                            <div className="flex items-center justify-center gap-3">
+                                MONTHLY/WEEKLY PLAN
+                                <Select>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Select the month" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Months</SelectLabel>
+                                            {months.map((month) => (
+                                                <SelectItem value={month}>{month}</SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </TableHead>
                     </TableRow>
                     <TableRow>
@@ -58,7 +76,9 @@ const MonthlyWeeklyProgram = () => {
                     <TableRow>
                         <TableHead className="text-center">1</TableHead>
                         {days.map((day) => (
-                            <TableCell className="text-center"></TableCell>
+                            <TableCell className="text-center">
+                                <TrainingSession />
+                            </TableCell>
                         ))}
                         {days.map((day) => (
                             <TableCell className="text-center"></TableCell>
