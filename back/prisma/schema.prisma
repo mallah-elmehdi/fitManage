@@ -117,6 +117,7 @@ enum Muscle {
     LATS
     TRAPS
     RHOMBOIDS
+    SHOULDERS
     REAR_DELTS
     FRONT_DELTS
     SIDE_DELTS
@@ -188,6 +189,37 @@ enum MedicationType {
     PAIN_RELIEVERS
     ANTI_DEPRESSANTS
     ANTI_INFLAMMATORY
+    OTHER
+}
+
+enum ExerciseMechanic {
+    COMPOUND // Multi-joint, multiple muscle groups (e.g., Squat, Bench Press)
+    ISOLATION // Single-joint, focused (e.g., Biceps Curl, Leg Extension
+}
+
+enum PlaneOfMotion {
+    SAGITTAL
+    FRONTAL
+    TRANSVERSE
+    MULTIPLANAR
+}
+
+enum Equipment {
+    DUMBBELL
+    BARBELL
+    KETTLEBELL
+    CABLE_MACHINE
+    RESISTANCE_MACHINE
+    RESISTANCE_BAND
+    MEDICINE_BALL
+    STABILITY_BALL
+    BOSU_BALL
+    TRX_SUSPENSION
+    SANDBAG
+    PLATE
+    EZ_BAR
+    BODYWEIGHT
+    FOAM_ROLLER
     OTHER
 }
 
@@ -321,20 +353,24 @@ model MedicalAndHealthHistory {
 // ------------------------------- ONE SESSION BTREAKDOWN
 
 model ExerciseFormat {
-    id    Int             @id @default(autoincrement())
-    name  String
-    focus TrainingFocus[]
+    id   Int    @id @default(autoincrement())
+    name String
 
-    image String?
-    video String?
+    equipment         Equipment?
+    exercise_mechanic ExerciseMechanic?
+    plane_of_motion   PlaneOfMotion?
 
     primary_muscles    Muscle[] // agonist 
     secondary_muscles  Muscle[] //  Synergists
     stabilizer_muscles Muscle[] //  Stabilizers
-    opposite_muscles   Muscle[] //  Antagonists
 
-    appropriate_fitness_level   FitnessLevel
     appropriate_training_phases TrainingPhase[]
+    appropriate_fitness_level   FitnessLevel?
+    focus                       TrainingFocus?
+
+    images       String[]
+    instructions String[]
+    video        String?
 
     Exercise Exercise[]
 

@@ -12,6 +12,7 @@ import MedicalAndHealthHistories from './medical_and_health_histories';
 import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible';
+import TrainingProgram from './training_program';
 
 const AthleteDetails = () => {
     const { athleteId } = useParams();
@@ -42,19 +43,26 @@ const AthleteDetails = () => {
                             <AlertDescription></AlertDescription>
                         </Alert>
                     )}
-                    <div className="bg-neutral-700 w-fit p-2 flex">
+                    <div className="bg-primary w-fit p-2 flex">
                         <TypographyH2 className="text-white uppercase">{athlete?.name}</TypographyH2>
-                    </div>
-                    <Separator />
-                    {/* ------------------------------ */}
-                    <div className="bg-slate-200 w-fit p-1">
-                        <TypographyP>MACRO CYCLE</TypographyP>
                     </div>
                     <Separator />
                     {/* ------------------------------ */}
                     <Collapsible defaultOpen className="flex gap-3 flex-col">
                         <CollapsibleTrigger>
-                            <div className="bg-slate-200 w-fit p-1">
+                            <div className="bg-secondary w-fit p-1">
+                                <TypographyP>TRAINING PROGRAM</TypographyP>
+                            </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                            <TrainingProgram />
+                        </CollapsibleContent>
+                    </Collapsible>
+                    <Separator />
+                    {/* ------------------------------ */}
+                    <Collapsible defaultOpen className="flex gap-3 flex-col">
+                        <CollapsibleTrigger>
+                            <div className="bg-secondary w-fit p-1">
                                 <TypographyP>PERSONAL INFO</TypographyP>
                             </div>
                         </CollapsibleTrigger>
@@ -74,7 +82,7 @@ const AthleteDetails = () => {
                     {/* ----------------------------------- */}
                     <Collapsible defaultOpen className="flex gap-3 flex-col">
                         <CollapsibleTrigger>
-                            <div className="bg-slate-200 w-fit p-1">
+                            <div className="bg-secondary w-fit p-1">
                                 <TypographyP>MEDICAL & HEALTH HISTORY</TypographyP>
                             </div>
                         </CollapsibleTrigger>
@@ -88,7 +96,7 @@ const AthleteDetails = () => {
                     {/* ----------------------------------- */}
                     <Collapsible defaultOpen className="flex gap-3 flex-col">
                         <CollapsibleTrigger>
-                            <div className="bg-slate-200 w-fit p-1">
+                            <div className="bg-secondary w-fit p-1">
                                 <TypographyP>ASSESSMENTS</TypographyP>
                             </div>
                         </CollapsibleTrigger>

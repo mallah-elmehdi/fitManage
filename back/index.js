@@ -6,6 +6,7 @@ import env from './src/utils/env';
 import athleteRouter from './src/routes/athleteRouter';
 import assessmentRouter from './src/routes/assessmentRouter';
 import medicalAndHealthHistoryRouter from './src/routes/medicalAndHealthHistoryRouter';
+import exerciseRouter from './src/routes/exerciseRouter';
 import error from './src/middlewares/errorHandler';
 
 // APPLICATION
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/athlete', athleteRouter);
 app.use('/assessment', assessmentRouter);
 app.use('/medical-and-health-history', medicalAndHealthHistoryRouter);
+app.use('/exercise', exerciseRouter);
 
 // ERROR HANDLER
 const { errorHandler } = error;

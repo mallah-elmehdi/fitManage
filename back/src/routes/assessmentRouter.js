@@ -12,3 +12,5 @@ router.route('/').post(assessment.createAssessment);
 router.route('/:assessmentId').delete(assessment.deleteAssessmentById);
 
 export default router;
+
+

@@ -147,3 +147,74 @@ export enum MEDICATION_TYPE {
     ANTI_INFLAMMATORY = 'Anti inflammatory',
     OTHER = 'Other',
 }
+
+// Exercise mechanic (movement type)
+export enum EXERCISE_MECHANIC {
+    COMPOUND = 'Compound', // Multi-joint, multiple muscle groups
+    ISOLATION = 'Isolation', // Single-joint, focused
+}
+
+// Plane of motion
+export enum PLANE_OF_MOTION {
+    SAGITTAL = 'Sagittal',
+    FRONTAL = 'Frontal',
+    TRANSVERSE = 'Transverse',
+    MULTIPLANAR = 'Multiplanar',
+}
+
+// Equipment
+export enum EQUIPMENT {
+    DUMBBELL = 'Dumbbell',
+    BARBELL = 'Barbell',
+    KETTLEBELL = 'Kettlebell',
+    CABLE_MACHINE = 'Cable machine',
+    RESISTANCE_MACHINE = 'Resistance machine',
+    RESISTANCE_BAND = 'Resistance band',
+    MEDICINE_BALL = 'Medicine ball',
+    STABILITY_BALL = 'Stability ball',
+    BOSU_BALL = 'BOSU ball',
+    TRX_SUSPENSION = 'TRX suspension',
+    SANDBAG = 'Sandbag',
+    PLATE = 'Plate',
+    EZ_BAR = 'E-Z bar',
+    BODYWEIGHT = 'Bodyweight',
+    FOAM_ROLLER = 'Foam roller',
+    OTHER = 'Other',
+}
+
+export enum MUSCLE {
+    // --- Upper Body
+    CHEST = 'Chest',
+    UPPER_CHEST = 'Upper chest',
+    LOWER_CHEST = 'Lower chest',
+    BACK = 'Back',
+    LATS = 'Lats',
+    TRAPS = 'Traps',
+    RHOMBOIDS = 'Rhomboids',
+    SHOULDERS = 'Shoulders',
+    REAR_DELTS = 'Rear delts',
+    FRONT_DELTS = 'Front delts',
+    SIDE_DELTS = 'Side delts',
+    BICEPS = 'Biceps',
+    TRICEPS = 'Triceps',
+    FOREARMS = 'Forearms',
+
+    // --- Core
+    ABDOMINALS = 'Abdominals',
+    OBLIQUES = 'Obliques',
+    TRANSVERSE_ABS = 'Transverse abdominis',
+    ERECTOR_SPINAE = 'Erector spinae',
+
+    // --- Lower Body
+    GLUTES = 'Glutes',
+    QUADRICEPS = 'Quadriceps',
+    HAMSTRINGS = 'Hamstrings',
+    ADDUCTORS = 'Adductors',
+    ABDUCTORS = 'Abductors',
+    CALVES = 'Calves',
+    TIBIALIS_ANTERIOR = 'Tibialis anterior',
+
+    // --- Neck
+    NECK_FLEXORS = 'Neck flexors',
+    NECK_EXTENSORS = 'Neck extensors',
+}

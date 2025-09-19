@@ -1,5 +1,5 @@
 // Menu items.
-import { BicepsFlexed, Calendar, Home } from 'lucide-react';
+import { BicepsFlexed, Calendar, Dumbbell, Home } from 'lucide-react';
 
 export const SIDEBAR_MENU = [
     {
@@ -16,5 +16,10 @@ export const SIDEBAR_MENU = [
         title: 'Athletes',
         url: '/athletes',
         icon: BicepsFlexed,
+    },
+    {
+        title: 'Exercises',
+        url: '/exercises',
+        icon: Dumbbell,
     },
 ];
