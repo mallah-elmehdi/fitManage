@@ -400,37 +400,37 @@ model Exercise {
 
 // ------------------------------- TRAINING PLAN BTREAKDOWN
 
-model Macrocycle {
-    id        Int      @id @default(autoincrement())
-    startDate DateTime
-    endDate   DateTime
+model MacroCycle {
+    id         Int      @id @default(autoincrement())
+    start_date DateTime @unique
+    end_date   DateTime
 
-    mesocycles Mesocycle[]
+    mesocycles MesoCycle[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
-model Mesocycle {
-    id        Int      @id @default(autoincrement())
-    startDate DateTime
-    endDate   DateTime
+model MesoCycle {
+    id         Int      @id @default(autoincrement())
+    start_date DateTime @unique
+    end_date   DateTime
 
-    macrocycle   Macrocycle @relation(fields: [macrocycleId], references: [id])
+    macrocycle   MacroCycle @relation(fields: [macrocycleId], references: [id])
     macrocycleId Int
 
-    microcycles Microcycle[]
+    microcycles MicroCycle[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
-model Microcycle {
-    id        Int      @id @default(autoincrement())
-    startDate DateTime
-    endDate   DateTime
+model MicroCycle {
+    id         Int      @id @default(autoincrement())
+    start_date DateTime @unique
+    end_date   DateTime
 
-    mesocycle   Mesocycle @relation(fields: [mesocycleId], references: [id])
+    mesocycle   MesoCycle @relation(fields: [mesocycleId], references: [id])
     mesocycleId Int
 
     workoutSessions WorkoutSession[]
@@ -446,7 +446,7 @@ model WorkoutSession {
     athlete   Athlete @relation(fields: [athleteId], references: [id])
     athleteId Int
 
-    microcycle   Microcycle @relation(fields: [microcycleId], references: [id])
+    microcycle   MicroCycle @relation(fields: [microcycleId], references: [id])
     microcycleId Int
 
     training_level TrainingLevel?

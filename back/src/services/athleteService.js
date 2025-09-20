@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getYearStart } from '../utils/func';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,24 @@ const getAthleteByIdService = async (id) => {
                 medical_and_health_histories: {
                     orderBy: {
                         createdAt: 'desc',
+                    },
+                },
+                WorkoutSessions: {
+                    where: {
+                        microcycle: {
+                            mesocycle: {
+                                macrocycle: {
+                                    start_date: getYearStart(new Date()),
+                                },
+                            },
+                        },
+                    },
+                    include: {
+                        microcycle: {
+                            include: {
+                                mesocycle: true,
+                            },
+                        },
                     },
                 },
             },

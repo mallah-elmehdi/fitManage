@@ -1,32 +1,40 @@
+// @ts-nocheck
+import { Plus } from 'lucide-react';
+import { Link, useParams } from 'react-router';
 import { Button } from '~/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 import AnnualProgram from './annual_program';
 import MonthlyWeeklyProgram from './monthly_weekly_program';
-import { Plus } from 'lucide-react';
-import AddTrainingSessionForm from './add_training_session_form';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { TRAINING_PHASE } from '~/lib/enums';
+import { getDaysInMonthByIndex } from '~/lib/funs';
 
-const TrainingProgram = () => {
+const TrainingProgram = ({ data }: { data: any }) => {
+    const dataBreakDown = Array.from({ length: 5 }).map(() =>
+        Array.from({ length: 12 }).map((_, index) => Array.from({ length: getDaysInMonthByIndex(index) }).map(() => 0))
+    );
+
+    if (data) {
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            const phaseIndex = Object.keys(TRAINING_PHASE).indexOf(element.training_phase);
+            const monthIndex = new Date(element.microcycle.mesocycle.start_date).getMonth();
+            const dayIndex = new Date(element.date).getDay();
+
+            dataBreakDown[phaseIndex][monthIndex][dayIndex] += 1;
+        }
+    }
+
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex items-center py-4 gap-2 sm:flex-row-reverse flex-col">
-                <Dialog>
-                    <DialogTrigger className="ml-auto">
-                        <Button variant="outline">
-                            <Plus /> Add Training Session Form
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="overflow-auto">
-                        <DialogHeader>
-                            <DialogTitle>Add Training Session Form</DialogTitle>
-                            <DialogDescription>these are the training session form detail</DialogDescription>
-                        </DialogHeader>
-                        {/* ----------add here */}
-                        <AddTrainingSessionForm />
-                    </DialogContent>
-                </Dialog>
-            </div>
-            <AnnualProgram />
-            <MonthlyWeeklyProgram />
+            <Link to="training-session" className="self-end">
+                <Button variant="outline">
+                    <Plus /> Add Training Session Form
+                </Button>
+            </Link>
+            <AnnualProgram data={dataBreakDown} />
+            <MonthlyWeeklyProgram data={dataBreakDown} />
         </div>
     );
 };

@@ -1,41 +1,43 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { AlertCircleIcon } from 'lucide-react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'sonner';
 import Layout from '~/components/layout';
-import { Separator } from '~/components/ui/separator';
-import { TypographyH2, TypographyP } from '~/components/ui/typography';
-import PersonalInfo from './personal_info';
-import Emergency from './emergency';
-import Assessments from './assessments';
-import MedicalAndHealthHistories from './medical_and_health_histories';
-import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from 'lucide-react';
+import Title from '~/components/title';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible';
+import { Separator } from '~/components/ui/separator';
+import { TypographyH2 } from '~/components/ui/typography';
+import { getAthleteById } from '~/context/api/athleteApi';
+import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
+import Assessments from './assessments';
+import Emergency from './emergency';
+import MedicalAndHealthHistories from './medical_and_health_histories';
+import PersonalInfo from './personal_info';
 import TrainingProgram from './training_program';
 
 const AthleteDetails = () => {
+    const dispatch = useAppDispatch();
+    const { athlete } = useAppSelector((state) => state.athlete);
+
     const { athleteId } = useParams();
-    const [athlete, setAthlete] = useState<any>({});
 
     useEffect(() => {
-        if (athleteId)
-            axios
-                .get('http://localhost:9090/athlete/' + athleteId)
-                .then((results) => {
-                    setAthlete(results.data.result);
-                })
+        if (athleteId) {
+            dispatch(getAthleteById(athleteId))
+                .unwrap()
                 .catch((error) => {
-                    toast.error(error.message);
-                })
-                .finally(() => {});
-    }, []);
+                    toast.error(error?.message || 'Failed to fetch athlete');
+                });
+        }
+    }, [athleteId, dispatch]);
 
-    if (athleteId && athlete)
-        return (
-            <Layout>
+    return (
+        <Layout>
+            {athlete ? (
                 <div className="flex-1 flex gap-3 flex-col">
                     <Separator />
+
                     {athlete && athlete.medical_and_health_histories && athlete.medical_and_health_histories.length > 0 && (
                         <Alert variant="destructive">
                             <AlertCircleIcon />
@@ -50,29 +52,25 @@ const AthleteDetails = () => {
                     {/* ------------------------------ */}
                     <Collapsible defaultOpen className="flex gap-3 flex-col">
                         <CollapsibleTrigger>
-                            <div className="bg-secondary w-fit p-1">
-                                <TypographyP>TRAINING PROGRAM</TypographyP>
-                            </div>
+                            <Title>TRAINING PROGRAM</Title>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                            <TrainingProgram />
+                            <TrainingProgram data={athlete?.WorkoutSessions} />
                         </CollapsibleContent>
                     </Collapsible>
                     <Separator />
                     {/* ------------------------------ */}
                     <Collapsible defaultOpen className="flex gap-3 flex-col">
                         <CollapsibleTrigger>
-                            <div className="bg-secondary w-fit p-1">
-                                <TypographyP>PERSONAL INFO</TypographyP>
-                            </div>
+                            <Title>PERSONAL INFO</Title>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                             <div className="grid grid-flow-row sm:grid-cols-2 gap-4 grid-cols-1 ">
                                 <div className="col-span-1">
-                                    <PersonalInfo {...athlete} />
+                                    <PersonalInfo />
                                 </div>
                                 <div className="col-span-1">
-                                    <Emergency {...athlete} />
+                                    <Emergency />
                                 </div>
                             </div>
                         </CollapsibleContent>
@@ -82,45 +80,28 @@ const AthleteDetails = () => {
                     {/* ----------------------------------- */}
                     <Collapsible defaultOpen className="flex gap-3 flex-col">
                         <CollapsibleTrigger>
-                            <div className="bg-secondary w-fit p-1">
-                                <TypographyP>MEDICAL & HEALTH HISTORY</TypographyP>
-                            </div>
+                            <Title>MEDICAL & HEALTH HISTORY</Title>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                            <MedicalAndHealthHistories
-                                data={athlete?.medical_and_health_histories ? athlete?.medical_and_health_histories : []}
-                            />
+                            <MedicalAndHealthHistories />
                         </CollapsibleContent>
                     </Collapsible>
                     <Separator />
                     {/* ----------------------------------- */}
                     <Collapsible defaultOpen className="flex gap-3 flex-col">
                         <CollapsibleTrigger>
-                            <div className="bg-secondary w-fit p-1">
-                                <TypographyP>ASSESSMENTS</TypographyP>
-                            </div>
+                            <Title>ASSESSMENTS</Title>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                            <Assessments data={athlete?.assessments ? athlete?.assessments : []} />
+                            <Assessments />
                         </CollapsibleContent>
                     </Collapsible>
                 </div>
-            </Layout>
-        );
-    else if (athleteId && !athlete)
-        return (
-            <Layout>
-                <div className="flex-1 flex gap-3 flex-col">
-                    <Separator />
-                    <div className="bg-neutral-200 w-fit p-2">
-                        <TypographyH2 className=" uppercase p-3">Not Found</TypographyH2>
-                    </div>
-                    <Separator />
-                </div>
-            </Layout>
-        );
-
-    return null;
+            ) : (
+                <Title>NOT FOUND</Title>
+            )}
+        </Layout>
+    );
 };
 
 export default AthleteDetails;

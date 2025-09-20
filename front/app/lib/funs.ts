@@ -28,3 +28,27 @@ export const dateFormatting = (date: string, isFull?: boolean) => {
     }
     return 'N/A';
 };
+
+export function getMonthDaysIndex(monthIndex: number) {
+    let date = new Date();
+    date = new Date(date.getFullYear(), monthIndex + 1, 0);
+
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    // first & last day of month
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    const result = [];
+    for (let d = firstDay; d <= lastDay; d.setDate(d.getDate() + 1)) {
+        result.push(d.getDay());
+    }
+
+    return result;
+}
+
+export function getDaysInMonthByIndex(monthIndex: number) {
+    const year = new Date().getFullYear();
+    return new Date(year, monthIndex + 1, 0).getDate();
+}

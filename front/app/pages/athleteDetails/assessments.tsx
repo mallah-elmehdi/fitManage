@@ -29,6 +29,10 @@ import { dateFormatting } from '~/lib/funs';
 import AddAssessmentForm from './add_assessment_form';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
+import { AssessmentType } from '~/lib/types';
+import { deleteAssessment } from '~/context/api/assessmentApi';
+import { useParams } from 'react-router';
 
 export type Assessment = {
     id: number;
@@ -41,7 +45,7 @@ export type Assessment = {
     createdAt: string;
 };
 
-export const columns: ColumnDef<Assessment>[] = [
+export const columns: ColumnDef<AssessmentType>[] = [
     {
         accessorKey: 'createdAt',
         header: 'Assessment date',
@@ -146,18 +150,8 @@ export const columns: ColumnDef<Assessment>[] = [
         cell: ({ row }) => {
             const navigate = useNavigate();
             const id = row.original.id;
-
-            const deleteItem = () => {
-                axios
-                    .delete('http://localhost:9090/assessment/' + id)
-                    .then((res) => {
-                        toast.success(res.data.message);
-                        setTimeout(() => {
-                            document.location.reload();
-                        }, 1000);
-                    })
-                    .catch((err) => toast.error(err.message));
-            };
+            const dispatch = useAppDispatch();
+            const { athleteId } = useParams();
 
             return (
                 <DropdownMenu>
@@ -173,7 +167,7 @@ export const columns: ColumnDef<Assessment>[] = [
                             <Info className="text-primary" />
                             Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={deleteItem}>
+                        <DropdownMenuItem onClick={() => dispatch(deleteAssessment({ id: id + '', athleteId: athleteId + '' }))}>
                             <Trash className="text-primary" />
                             Delete
                         </DropdownMenuItem>
@@ -184,14 +178,16 @@ export const columns: ColumnDef<Assessment>[] = [
     },
 ];
 
-const Assessments = ({ data }: { data: Assessment[] }) => {
+const Assessments = () => {
+    const { athlete } = useAppSelector((state) => state.athlete);
+
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
-        data,
+        data: athlete?.assessments || [],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,

@@ -1,8 +1,31 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import TrainingSession from './training_session';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const AnnualProgram = () => {
+const SessionRender = ({ data, index }: { data: number[][][] | undefined; index: number }) => {
+    return (
+        <>
+            {data &&
+                data[index].map((sessions) => {
+                    const numberOfSessions = sessions.reduce((a, b) => a + b);
+                    return (
+                        <>
+                            {numberOfSessions === 0 ? (
+                                <TableCell className="text-center" />
+                            ) : (
+                                <TableCell className="text-center">
+                                    <TrainingSession disabled numberOfSessions={numberOfSessions} />
+                                </TableCell>
+                            )}
+                        </>
+                    );
+                })}
+        </>
+    );
+};
+
+const AnnualProgram = ({ data }: { data: number[][][] | undefined }) => {
     return (
         <div className="border rounded-md">
             <Table>
@@ -33,9 +56,7 @@ const AnnualProgram = () => {
                     <TableRow>
                         <TableHead className="text-center ">Stabilization</TableHead>
                         <TableHead className="text-center ">1</TableHead>
-                        {months.map((month) => (
-                            <TableCell className="text-center"></TableCell>
-                        ))}
+                        <SessionRender data={data} index={0} />
                     </TableRow>
 
                     <TableRow>
@@ -43,28 +64,20 @@ const AnnualProgram = () => {
                             Strength
                         </TableHead>
                         <TableHead className="text-center ">2</TableHead>
-                        {months.map((month) => (
-                            <TableCell className="text-center"></TableCell>
-                        ))}
+                        <SessionRender data={data} index={1} />
                     </TableRow>
                     <TableRow>
                         <TableHead className="text-center ">3</TableHead>
-                        {months.map((month) => (
-                            <TableCell className="text-center"></TableCell>
-                        ))}
+                        <SessionRender data={data} index={2} />
                     </TableRow>
                     <TableRow>
                         <TableHead className="text-center ">4</TableHead>
-                        {months.map((month) => (
-                            <TableCell className="text-center"></TableCell>
-                        ))}
+                        <SessionRender data={data} index={3} />
                     </TableRow>
                     <TableRow>
                         <TableHead className="text-center  rounded-bl-md">Power</TableHead>
                         <TableHead className="text-center ">5</TableHead>
-                        {months.map((month) => (
-                            <TableCell className="text-center"></TableCell>
-                        ))}
+                        <SessionRender data={data} index={4} />
                     </TableRow>
                 </TableBody>
             </Table>

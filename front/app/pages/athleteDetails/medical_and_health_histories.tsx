@@ -12,28 +12,20 @@ import {
 } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, Trash } from 'lucide-react';
 import React from 'react';
-import { useNavigate } from 'react-router';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { deleteMedicalAndHealthHistory } from '~/context/api/medicalAndHealthHistoryApi';
+import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
 import { CHRONIC_DISEASE_TYPE, INJURY_TYPE, MEDICATION_TYPE, SURGERY_TYPE } from '~/lib/enums';
 import { dateFormatting } from '~/lib/funs';
+import { MedicalAndHealthHistoryType } from '~/lib/types';
 import AddMedicalAndHealthHistoryForm from './add_medical_and_health_history_form';
-import axios from 'axios';
-import { toast } from 'sonner';
+import { useParams } from 'react-router';
 
-export type MedicalAndHealthHistory = {
-    id: number;
-    past_injuries: INJURY_TYPE[];
-    past_surgeries: SURGERY_TYPE[];
-    chronic_disease: CHRONIC_DISEASE_TYPE[];
-    medications: MEDICATION_TYPE[];
-    createdAt: string;
-};
-
-export const columns: ColumnDef<MedicalAndHealthHistory>[] = [
+export const columns: ColumnDef<MedicalAndHealthHistoryType | undefined>[] = [
     {
         accessorKey: 'createdAt',
         header: 'Assessment date',
@@ -111,20 +103,9 @@ export const columns: ColumnDef<MedicalAndHealthHistory>[] = [
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => {
-            const navigate = useNavigate();
-            const id = row.original.id;
-
-            const deleteItem = () => {
-                axios
-                    .delete('http://localhost:9090/medical-and-health-history/' + id, {})
-                    .then((res) => {
-                        toast.success(res.data.message);
-                        setTimeout(() => {
-                            document.location.reload();
-                        }, 1000);
-                    })
-                    .catch((err) => toast.error(err.message));
-            };
+            const id = row.original?.id;
+            const dispatch = useAppDispatch();
+            const { athleteId } = useParams();
 
             return (
                 <DropdownMenu>
@@ -136,7 +117,9 @@ export const columns: ColumnDef<MedicalAndHealthHistory>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={deleteItem}>
+                        <DropdownMenuItem
+                            onClick={() => dispatch(deleteMedicalAndHealthHistory({ id: id + '', athleteId: athleteId + '' }))}
+                        >
                             <Trash className="text-primary" />
                             Delete
                         </DropdownMenuItem>
@@ -147,14 +130,16 @@ export const columns: ColumnDef<MedicalAndHealthHistory>[] = [
     },
 ];
 
-const MedicalAndHealthHistories = ({ data }: { data: MedicalAndHealthHistory[] }) => {
+const MedicalAndHealthHistories = () => {
+    const { athlete } = useAppSelector((state) => state.athlete);
+
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
-        data,
+        data: athlete?.medical_and_health_histories || [],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,

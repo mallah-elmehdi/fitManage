@@ -25,15 +25,12 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { FITNESS_LEVEL, GENDER } from '~/lib/enums';
 import { useNavigate } from 'react-router';
+import { AthleteType } from '~/lib/types';
+import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
+import { getAllAthletes } from '~/context/api/athleteApi';
+import Loader from '~/components/loader';
 
-export type Athlete = {
-    id: string;
-    name: string;
-    fitness_level: FITNESS_LEVEL;
-    gender: GENDER;
-};
-
-export const columns: ColumnDef<Athlete>[] = [
+export const columns: ColumnDef<AthleteType>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -55,15 +52,22 @@ export const columns: ColumnDef<Athlete>[] = [
         cell: ({ row }) => <div className="capitalize">{row.getValue('name')}</div>,
     },
     {
-        accessorKey: 'fitness_level',
-        header: 'Fitness Level',
-        cell: ({ row }) => {
-            const fitness_level = row.getValue('fitness_level') + '';
-            // const fitness_level_utils = FITNESS_LEVEL[fitness_level] || { color: 'bg-zinc-300', text: 'N/A' };
-
-            return <Badge variant="outline">{fitness_level}</Badge>;
-        },
+        id: 'gender',
+        accessorKey: 'gender',
+        header: 'Gender',
+        // @ts-ignore: Unreachable code error
+        cell: ({ row }) => <div className="capitalize">{GENDER[row.getValue('gender')]}</div>,
     },
+    // {
+    //     accessorKey: 'fitness_level',
+    //     header: 'Fitness Level',
+    //     cell: ({ row }) => {
+    //         const fitness_level = row.getValue('fitness_level') + '';
+    //         // const fitness_level_utils = FITNESS_LEVEL[fitness_level] || { color: 'bg-zinc-300', text: 'N/A' };
+
+    //         return <Badge variant="outline">{fitness_level}</Badge>;
+    //     },
+    // },
     {
         id: 'actions',
         enableHiding: false,
@@ -94,10 +98,12 @@ const AthletesTable = () => {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-    const [data, setData] = React.useState([]);
+    const dispatch = useAppDispatch();
+    const { athletes } = useAppSelector((state) => state.athlete);
+    const { is_loading } = useAppSelector((state) => state.loader);
 
     const table = useReactTable({
-        data,
+        data: athletes,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -116,16 +122,12 @@ const AthletesTable = () => {
     });
 
     useEffect(() => {
-        axios
-            .get('http://localhost:9090/athlete/all')
-            .then((results) => {
-                setData(results.data.result);
-            })
+        dispatch(getAllAthletes())
+            .unwrap()
             .catch((error) => {
-                toast.error(error.message);
-            })
-            .finally(() => {});
-    }, []);
+                toast.error(error?.message || 'Failed to fetch athlete');
+            });
+    }, [dispatch]);
 
     return (
         <div className="w-full">

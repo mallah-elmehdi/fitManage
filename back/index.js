@@ -7,6 +7,7 @@ import athleteRouter from './src/routes/athleteRouter';
 import assessmentRouter from './src/routes/assessmentRouter';
 import medicalAndHealthHistoryRouter from './src/routes/medicalAndHealthHistoryRouter';
 import exerciseRouter from './src/routes/exerciseRouter';
+import workoutSessionRouter from './src/routes/workoutSessionRouter';
 import error from './src/middlewares/errorHandler';
 
 // APPLICATION
@@ -21,6 +22,7 @@ app.use('/athlete', athleteRouter);
 app.use('/assessment', assessmentRouter);
 app.use('/medical-and-health-history', medicalAndHealthHistoryRouter);
 app.use('/exercise', exerciseRouter);
+app.use('/workout-session', workoutSessionRouter);
 
 // ERROR HANDLER
 const { errorHandler } = error;

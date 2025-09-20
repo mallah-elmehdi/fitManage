@@ -11,6 +11,14 @@ export enum TRAINING_LEVEL {
     POWER = 'Power (Level 3)',
 }
 
+export enum EXERCISE_TYPE {
+    WORM_UP = 'Worm up',
+    ACTIVATION = 'Activation',
+    SKILL_DEVELOPMENT = 'Skill development',
+    RESISTANCE = 'Resistance',
+    COOL_DOWN = 'Cool down',
+}
+
 // ✅ Training Phase
 export enum TRAINING_PHASE {
     STABILIZATION_ENDURANCE = 'Phase 1 - Stabilization Endurance',
