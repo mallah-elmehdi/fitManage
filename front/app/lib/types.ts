@@ -2,9 +2,11 @@ import {
     CHRONIC_DISEASE_TYPE,
     EQUIPMENT,
     EXERCISE_MECHANIC,
+    EXERCISE_TYPE,
     FITNESS_LEVEL,
     GENDER,
     INJURY_TYPE,
+    INTENSITY,
     MEDICATION_TYPE,
     MUSCLE,
     OVERHEAD_SQUAT_POSTURE_DISTORTION,
@@ -13,6 +15,7 @@ import {
     SINGLE_SQUAT_POSTURE_DISTORTION,
     STATIC_POSTURE_DISTORTION,
     SURGERY_TYPE,
+    TEMPO,
     TRAINING_FOCUS,
     TRAINING_PHASE,
 } from './enums';
@@ -54,7 +57,7 @@ export type AthleteType = {
     medical_and_health_histories: MedicalAndHealthHistoryType[];
     assessments: AssessmentType[];
 
-    WorkoutSessions: WorkoutSession[];
+    WorkoutSessions: WorkoutSessionType[];
 
     // createdAt: Date;
     // updatedAt: Date;
@@ -109,18 +112,70 @@ export type MedicalAndHealthHistoryType = {
     updatedAt: Date;
 };
 
-export type WorkoutSession = {
+export type WorkoutSessionType = {
     id: number;
     date: Date;
 
     athleteId: number;
     microcycleId: number;
+    microcycle: MicroCycleType;
 
-    training_level?: string | null; // or TrainingLevel enum if defined
-    training_phase?: string | null; // or TrainingPhase enum if defined
+    training_level: string; // or TrainingLevel enum if defined
+    training_phase: string; // or TrainingPhase enum if defined
 
-    exercises: any[]; // replace with Exercise[] type when defined
+    exercises: Exercise[]; // replace with Exercise[] type when defined
 
     createdAt: Date;
+    updatedAt: Date;
+};
+
+export type MacroCycleType = {
+    id: number;
+    start_date: string; // or Date
+    end_date: string; // or Date
+    mesocycles: MesoCycleType[];
+    createdAt: string; // or Date
+    updatedAt: string; // or Date
+};
+
+export type MesoCycleType = {
+    id: number;
+    start_date: string; // or Date
+    end_date: string; // or Date
+    macrocycleId: number;
+    macrocycle: MacroCycleType;
+    microcycles: MicroCycleType[];
+    createdAt: string; // or Date
+    updatedAt: string; // or Date
+};
+
+export type MicroCycleType = {
+    id: number;
+    start_date: string; // or Date
+    end_date: string; // or Date
+    mesocycleId: number;
+    mesocycle: MesoCycleType;
+    workoutSessions: WorkoutSessionType[]; // define WorkoutSessionType separately
+    createdAt: string; // or Date
+    updatedAt: string; // or Date
+};
+
+export type Exercise = {
+    id: number;
+    exercise_format: ExerciseFormatType; // You'll need to define/import this type
+    exerciseFormatId: number;
+
+    exercise_type: EXERCISE_TYPE; // Define/import this enum or type too
+
+    set?: number;
+    repetition?: number;
+    tempo?: TEMPO; // Same here
+    rest: number; // in seconds
+    intensity?: INTENSITY; // And here
+
+    WorkoutSession?: WorkoutSessionType; // Define/import type
+    workoutSessionId?: number;
+
+    createdAt: Date; // Dates usually come as ISO Dates in JSON
     updatedAt: Date;
 };

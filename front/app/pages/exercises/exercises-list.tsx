@@ -48,9 +48,9 @@ const ExercisesList = () => {
 
             <div className="grid grid-cols-3 gap-3">
                 {data &&
-                    data.exercises.map((exe) => (
+                    data.exercises.map((exercise) => (
                         <div className="col-span-1 ">
-                            <ExerciseCard {...exe} />
+                            <ExerciseCard exercise={exercise} />
                         </div>
                     ))}
             </div>

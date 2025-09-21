@@ -12,6 +12,8 @@ import {
 } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, Trash } from 'lucide-react';
 import React from 'react';
+import { useParams } from 'react-router';
+import { toast } from 'sonner';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
@@ -23,7 +25,6 @@ import { CHRONIC_DISEASE_TYPE, INJURY_TYPE, MEDICATION_TYPE, SURGERY_TYPE } from
 import { dateFormatting } from '~/lib/funs';
 import { MedicalAndHealthHistoryType } from '~/lib/types';
 import AddMedicalAndHealthHistoryForm from './add_medical_and_health_history_form';
-import { useParams } from 'react-router';
 
 export const columns: ColumnDef<MedicalAndHealthHistoryType | undefined>[] = [
     {
@@ -107,6 +108,14 @@ export const columns: ColumnDef<MedicalAndHealthHistoryType | undefined>[] = [
             const dispatch = useAppDispatch();
             const { athleteId } = useParams();
 
+            const handler = () => {
+                dispatch(deleteMedicalAndHealthHistory({ id: id + '', athleteId: athleteId + '' }))
+                    .unwrap()
+                    .catch((error) => {
+                        toast.error(error?.message || 'Failed to fetch athlete');
+                    });
+            };
+
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -117,9 +126,7 @@ export const columns: ColumnDef<MedicalAndHealthHistoryType | undefined>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => dispatch(deleteMedicalAndHealthHistory({ id: id + '', athleteId: athleteId + '' }))}
-                        >
+                        <DropdownMenuItem onClick={handler}>
                             <Trash className="text-primary" />
                             Delete
                         </DropdownMenuItem>

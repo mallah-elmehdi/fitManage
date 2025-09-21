@@ -1,4 +1,4 @@
-import { Loader as _Loader } from 'components/ui/shadcn-io/ai/loader';
+import { Loader as _Loader } from '~/components/ui/shadcn-io/ai/loader';
 
 const Loader = () => {
     return (

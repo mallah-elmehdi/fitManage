@@ -1,28 +1,35 @@
-// @ts-nocheck
 import { Plus } from 'lucide-react';
-import { Link, useParams } from 'react-router';
+import { Link } from 'react-router';
 import { Button } from '~/components/ui/button';
-import AnnualProgram from './annual_program';
-import MonthlyWeeklyProgram from './monthly_weekly_program';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'sonner';
+import { useAppSelector } from '~/hooks/use-redux';
 import { TRAINING_PHASE } from '~/lib/enums';
 import { getDaysInMonthByIndex } from '~/lib/funs';
+import AnnualProgram from './annual_program';
+import MonthlyWeeklyProgram from './monthly_weekly_program';
 
-const TrainingProgram = ({ data }: { data: any }) => {
-    const dataBreakDown = Array.from({ length: 5 }).map(() =>
-        Array.from({ length: 12 }).map((_, index) => Array.from({ length: getDaysInMonthByIndex(index) }).map(() => 0))
+export type TrainingProgramTableType = { workoutSessionId: number | null; numberOfSessions: number }[][][];
+
+const TrainingProgram = () => {
+    const { athlete } = useAppSelector((state) => state.athlete);
+
+    const dataBreakDown: TrainingProgramTableType = Array.from({ length: 5 }).map(() =>
+        Array.from({ length: 12 }).map((_, index) =>
+            Array.from({ length: getDaysInMonthByIndex(index) }).map(() => ({
+                numberOfSessions: 0,
+                workoutSessionId: null,
+            }))
+        )
     );
 
-    if (data) {
-        for (let i = 0; i < data.length; i++) {
-            const element = data[i];
+    if (athlete?.WorkoutSessions) {
+        for (let i = 0; i < athlete.WorkoutSessions.length; i++) {
+            const element = athlete.WorkoutSessions[i];
             const phaseIndex = Object.keys(TRAINING_PHASE).indexOf(element.training_phase);
             const monthIndex = new Date(element.microcycle.mesocycle.start_date).getMonth();
-            const dayIndex = new Date(element.date).getDay();
+            const dayIndex = new Date(element.date).getDate() - 1;
 
-            dataBreakDown[phaseIndex][monthIndex][dayIndex] += 1;
+            dataBreakDown[phaseIndex][monthIndex][dayIndex].numberOfSessions += 1;
+            dataBreakDown[phaseIndex][monthIndex][dayIndex].workoutSessionId = element.id;
         }
     }
 

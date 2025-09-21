@@ -1,21 +1,22 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
 import TrainingSession from './training_session';
+import { TrainingProgramTableType } from './training_program';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const SessionRender = ({ data, index }: { data: number[][][] | undefined; index: number }) => {
+const SessionRender = ({ data, index }: { data: TrainingProgramTableType | undefined; index: number }) => {
     return (
         <>
             {data &&
                 data[index].map((sessions) => {
-                    const numberOfSessions = sessions.reduce((a, b) => a + b);
+                    const numberOfSessions = sessions.reduce((a, b) => a + b.numberOfSessions, 0);
                     return (
                         <>
                             {numberOfSessions === 0 ? (
                                 <TableCell className="text-center" />
                             ) : (
                                 <TableCell className="text-center">
-                                    <TrainingSession disabled numberOfSessions={numberOfSessions} />
+                                    <TrainingSession numberOfSessions={numberOfSessions} />
                                 </TableCell>
                             )}
                         </>
@@ -25,7 +26,7 @@ const SessionRender = ({ data, index }: { data: number[][][] | undefined; index:
     );
 };
 
-const AnnualProgram = ({ data }: { data: number[][][] | undefined }) => {
+const AnnualProgram = ({ data }: { data: TrainingProgramTableType }) => {
     return (
         <div className="border rounded-md">
             <Table>

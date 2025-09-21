@@ -10,6 +10,24 @@ const createWorkoutSessionService = async (data) => {
         throw error;
     }
 };
+const getWorkoutSessionByIdService = async (id) => {
+    try {
+        return await prisma.workoutSession.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                exercises: {
+                    include: {
+                        exercise_format: true,
+                    },
+                },
+            },
+        });
+    } catch (error) {
+        throw error;
+    }
+};
 
 const getAllWorkoutsByAthleteIdService = async (athleteId) => {
     try {
@@ -42,4 +60,5 @@ const getAllWorkoutsByAthleteIdService = async (athleteId) => {
 export default {
     createWorkoutSessionService,
     getAllWorkoutsByAthleteIdService,
+    getWorkoutSessionByIdService,
 };

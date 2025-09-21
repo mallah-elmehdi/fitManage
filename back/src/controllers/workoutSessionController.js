@@ -6,7 +6,7 @@ import microCycleService from '../services/microCycleService';
 import workoutSessionService from '../services/workoutSessionService';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart, getYearEnd, getYearStart } from '../utils/func';
 
-const { createWorkoutSessionService, getAllWorkoutsByAthleteIdService } = workoutSessionService;
+const { createWorkoutSessionService, getAllWorkoutsByAthleteIdService, getWorkoutSessionByIdService } = workoutSessionService;
 
 const { getMicroCycleByStartDateService, createMicroCycleService } = microCycleService;
 const { getMacroCycleByStartDateService, createMacroCycleService } = macroCycleService;
@@ -88,7 +88,21 @@ const getAllWorkoutsByAthleteId = async (req, res, next) => {
     }
 };
 
+const getWorkoutSessionById = async (req, res, next) => {
+    try {
+        const workoutSession = await getWorkoutSessionByIdService(parseInt(req.params.workoutSessionId));
+
+        return res.status(StatusCodes.OK).json({
+            message: 'the workout session fetched successfully',
+            result: workoutSession,
+        });
+    } catch (error) {
+        return next(error);
+    }
+};
+
 export default {
     createWorkoutSession,
     getAllWorkoutsByAthleteId,
+    getWorkoutSessionById,
 };

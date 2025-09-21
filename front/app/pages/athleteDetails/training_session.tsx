@@ -1,83 +1,191 @@
-import { X } from 'lucide-react';
+// @ts-nocheck
+import { format } from 'date-fns';
+import { toast } from 'sonner';
 import { Badge } from '~/components/ui/badge';
-import { Button } from '~/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from '~/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '~/components/ui/drawer';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { getWorkoutSessionById } from '~/context/api/workoutSession';
+import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
+import { EXERCISE_TYPE, INTENSITY, TEMPO, TRAINING_PHASE } from '~/lib/enums';
+import ExerciseDetail from './exercise_detail';
 
-const TrainingSession = ({ numberOfSessions, disabled }: { numberOfSessions?: number; disabled?: boolean }) => {
-    return disabled ? (
-        <Badge>{numberOfSessions}</Badge>
+const TrainingSession = ({
+    numberOfSessions,
+    workoutSessionId,
+    isToday,
+}: {
+    numberOfSessions: number;
+    workoutSessionId?: number | null;
+    isToday?: boolean;
+}) => {
+    const dispatch = useAppDispatch();
+    const { workoutSession } = useAppSelector((state) => state.workoutSession);
+    const handleFetch = () => {
+        dispatch(getWorkoutSessionById(workoutSessionId + ''))
+            .unwrap()
+            .catch((error) => {
+                toast.error(error?.message || 'Failed to fetch workout session');
+            });
+    };
+
+    return !workoutSessionId ? (
+        <Badge className={`${isToday ? 'bg-secondary text-primary' : ''}`}>{numberOfSessions}</Badge>
     ) : (
         <Drawer>
-            <DrawerTrigger asChild>
-                <Badge className="cursor-pointer">{numberOfSessions}</Badge>
+            <DrawerTrigger asChild onClick={handleFetch}>
+                <Badge className={`cursor-pointer ${isToday ? 'bg-secondary text-primary' : ''}`}>{numberOfSessions}</Badge>
             </DrawerTrigger>
-            <DrawerContent>
-                <div className="mx-auto w-full max-w-sm">
-                    <DrawerHeader>
-                        <DrawerTitle>Move Goal</DrawerTitle>
-                        <DrawerDescription>Set your daily activity goal.</DrawerDescription>
-                    </DrawerHeader>
-                    {/* <div className="p-4 pb-0">
-                        <div className="flex items-center justify-center space-x-2">
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8 shrink-0 rounded-full"
-                                onClick={() => onClick(-10)}
-                                disabled={goal <= 200}
-                            >
-                                <Minus />
-                                <span className="sr-only">Decrease</span>
-                            </Button>
-                            <div className="flex-1 text-center">
-                                <div className="text-7xl font-bold tracking-tighter">{goal}</div>
-                                <div className="text-muted-foreground text-[0.70rem] uppercase">Calories/day</div>
+            {workoutSession && (
+                <DrawerContent>
+                    <div className="px-10 pb-10 overflow-auto h-120">
+                        <div className="mx-auto w-full max-w-6xl ">
+                            <DrawerHeader>
+                                <DrawerTitle>{format(workoutSession.date, 'PPPP')} </DrawerTitle>
+                                {/* @ts-ignore: Unreachable code error */}
+                                <DrawerDescription>{TRAINING_PHASE[workoutSession.training_phase]} </DrawerDescription>
+                            </DrawerHeader>
+                            <div className="border rounded-md">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="bg-secondary">
+                                            <TableHead className="text-center">EXERCISE</TableHead>
+                                            <TableHead className="text-center w-30">SETS</TableHead>
+                                            <TableHead className="text-center w-30">REPS</TableHead>
+                                            <TableHead className="text-center w-30">REST</TableHead>
+                                            <TableHead className="text-center w-30">TEMPO</TableHead>
+                                            <TableHead className="text-center w-30">INTENSITY</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        <TableRow className="bg-secondary">
+                                            <TableHead className="text-center" colSpan={6}>
+                                                {EXERCISE_TYPE.WORM_UP}
+                                            </TableHead>
+                                        </TableRow>
+                                        {workoutSession.exercises
+                                            .filter((item) => EXERCISE_TYPE[item.exercise_type] === EXERCISE_TYPE.WORM_UP)
+                                            .map((exercise) => (
+                                                <TableRow>
+                                                    <ExerciseDetail
+                                                        name={exercise.exercise_format.name}
+                                                        exercise={exercise.exercise_format}
+                                                    />
+                                                    <TableCell className="text-center w-30">{exercise.set}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.repetition}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.rest}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{TEMPO[exercise.tempo]}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{INTENSITY[exercise.intensity]}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        {/* --- */}
+                                        <TableRow className="bg-secondary">
+                                            <TableHead className="text-center" colSpan={6}>
+                                                {EXERCISE_TYPE.ACTIVATION}
+                                            </TableHead>
+                                        </TableRow>
+                                        {workoutSession.exercises
+                                            .filter((item) => EXERCISE_TYPE[item.exercise_type] === EXERCISE_TYPE.ACTIVATION)
+                                            .map((exercise) => (
+                                                <TableRow>
+                                                    <ExerciseDetail
+                                                        name={exercise.exercise_format.name}
+                                                        exercise={exercise.exercise_format}
+                                                    />
+                                                    <TableCell className="text-center w-30">{exercise.set}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.repetition}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.rest}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{TEMPO[exercise.tempo]}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{INTENSITY[exercise.intensity]}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        {/* --- */}
+                                        <TableRow className="bg-secondary">
+                                            <TableHead className="text-center" colSpan={6}>
+                                                {EXERCISE_TYPE.SKILL_DEVELOPMENT}
+                                            </TableHead>
+                                        </TableRow>
+                                        {workoutSession.exercises
+                                            .filter((item) => EXERCISE_TYPE[item.exercise_type] === EXERCISE_TYPE.SKILL_DEVELOPMENT)
+                                            .map((exercise) => (
+                                                <TableRow>
+                                                    <ExerciseDetail
+                                                        name={exercise.exercise_format.name}
+                                                        exercise={exercise.exercise_format}
+                                                    />
+                                                    <TableCell className="text-center w-30">{exercise.set}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.repetition}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.rest}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{TEMPO[exercise.tempo]}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{INTENSITY[exercise.intensity]}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        {/* --- */}
+                                        <TableRow className="bg-secondary">
+                                            <TableHead className="text-center" colSpan={6}>
+                                                {EXERCISE_TYPE.RESISTANCE}
+                                            </TableHead>
+                                        </TableRow>
+                                        {workoutSession.exercises
+                                            .filter((item) => EXERCISE_TYPE[item.exercise_type] === EXERCISE_TYPE.RESISTANCE)
+                                            .map((exercise) => (
+                                                <TableRow>
+                                                    <ExerciseDetail
+                                                        name={exercise.exercise_format.name}
+                                                        exercise={exercise.exercise_format}
+                                                    />
+                                                    <TableCell className="text-center w-30">{exercise.set}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.repetition}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.rest}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{TEMPO[exercise.tempo]}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{INTENSITY[exercise.intensity]}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        {/* --- */}
+                                        <TableRow className="bg-secondary">
+                                            <TableHead className="text-center" colSpan={6}>
+                                                {EXERCISE_TYPE.COOL_DOWN}
+                                            </TableHead>
+                                        </TableRow>
+                                        {workoutSession.exercises
+                                            .filter((item) => EXERCISE_TYPE[item.exercise_type] === EXERCISE_TYPE.COOL_DOWN)
+                                            .map((exercise) => (
+                                                <TableRow>
+                                                    <ExerciseDetail
+                                                        name={exercise.exercise_format.name}
+                                                        exercise={exercise.exercise_format}
+                                                    />
+                                                    <TableCell className="text-center w-30">{exercise.set}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.repetition}</TableCell>
+                                                    <TableCell className="text-center w-30">{exercise.rest}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{TEMPO[exercise.tempo]}</TableCell>
+                                                    {/* @ts-ignore: Unreachable code error */}
+                                                    <TableCell className="text-center w-30">{INTENSITY[exercise.intensity]}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        {/* --- */}
+                                    </TableBody>
+                                </Table>
                             </div>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8 shrink-0 rounded-full"
-                                onClick={() => onClick(10)}
-                                disabled={goal >= 400}
-                            >
-                                <Plus />
-                                <span className="sr-only">Increase</span>
-                            </Button>
                         </div>
-                        <div className="mt-3 h-[120px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={data}>
-                                    <Bar
-                                        dataKey="goal"
-                                        style={
-                                            {
-                                                fill: 'hsl(var(--foreground))',
-                                                opacity: 0.9,
-                                            } as React.CSSProperties
-                                        }
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div> */}
-                    <DrawerFooter>
+
+                        {/* <DrawerFooter>
                         <Button>Submit</Button>
                         <DrawerClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DrawerClose>
-                    </DrawerFooter>
-                </div>
-            </DrawerContent>
+                    </DrawerFooter> */}
+                    </div>
+                </DrawerContent>
+            )}
         </Drawer>
     );
 };

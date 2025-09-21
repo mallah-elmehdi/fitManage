@@ -12,12 +12,15 @@ import {
 } from '@tanstack/react-table';
 import { Info, MoreHorizontal, Plus, Trash } from 'lucide-react';
 import React from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+import { toast } from 'sonner';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { deleteAssessment } from '~/context/api/assessmentApi';
+import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
 import {
     FITNESS_LEVEL,
     OVERHEAD_SQUAT_POSTURE_DISTORTION,
@@ -26,13 +29,8 @@ import {
     STATIC_POSTURE_DISTORTION,
 } from '~/lib/enums';
 import { dateFormatting } from '~/lib/funs';
-import AddAssessmentForm from './add_assessment_form';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
 import { AssessmentType } from '~/lib/types';
-import { deleteAssessment } from '~/context/api/assessmentApi';
-import { useParams } from 'react-router';
+import AddAssessmentForm from './add_assessment_form';
 
 export type Assessment = {
     id: number;
@@ -153,6 +151,14 @@ export const columns: ColumnDef<AssessmentType>[] = [
             const dispatch = useAppDispatch();
             const { athleteId } = useParams();
 
+            const handler = () => {
+                dispatch(deleteAssessment({ id: id + '', athleteId: athleteId + '' }))
+                    .unwrap()
+                    .catch((error) => {
+                        toast.error(error?.message || 'Failed to fetch athlete');
+                    });
+            };
+
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -167,7 +173,7 @@ export const columns: ColumnDef<AssessmentType>[] = [
                             <Info className="text-primary" />
                             Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => dispatch(deleteAssessment({ id: id + '', athleteId: athleteId + '' }))}>
+                        <DropdownMenuItem onClick={handler}>
                             <Trash className="text-primary" />
                             Delete
                         </DropdownMenuItem>

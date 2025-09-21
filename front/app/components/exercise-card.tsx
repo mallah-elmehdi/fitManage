@@ -7,7 +7,7 @@ import { ExerciseFormatType } from '~/lib/types';
 import { Badge } from './ui/badge';
 import { TypographyLi, TypographyP } from './ui/typography';
 
-const ExerciseCard = (exercise: ExerciseFormatType) => {
+const ExerciseCard = ({ exercise }: { exercise: ExerciseFormatType }) => {
     const {
         id,
         name,
