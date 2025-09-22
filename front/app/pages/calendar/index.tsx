@@ -74,7 +74,6 @@ const Calendar = () => {
         <Layout>
             <div className="flex-1 flex space-y-5 flex-col">
                 <PageTitle title={SIDEBAR_MENU[1].title} icon={React.createElement(SIDEBAR_MENU[1].icon)} />
-                workoutSessions:{workoutSessions.length}
                 <div className="border rounded-md">
                     <Table>
                         <TableHeader>

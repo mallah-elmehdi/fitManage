@@ -1,13 +1,11 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
+import { Dispatch, createAsyncThunk } from '@reduxjs/toolkit';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { isLoading } from '../slices/loaderSlice';
-import { AthleteType } from '~/lib/types';
+import { APIResponseType, AthleteType } from '~/lib/types';
+import { AthleteInitFormValues } from '~/pages/athletes/add_athlete_form';
 
 export const URL_HOST = 'http://localhost:9090';
 
-// Return type: Athlete
-// Arg type: number (athleteId)
-// Reject type: string (error message)
 export const getAthleteById = createAsyncThunk<
     AthleteType | null, // ✅ return type
     string, // ✅ argument type (athleteId)
@@ -28,8 +26,8 @@ export const getAthleteById = createAsyncThunk<
 });
 
 export const getAllAthletes = createAsyncThunk<
-    AthleteType[], // ✅ return type
-    void, // ✅ argument type (athleteId)
+    AthleteType[],
+    void,
     {
         rejectValue: string;
     }
@@ -46,3 +44,22 @@ export const getAllAthletes = createAsyncThunk<
     }
 });
 
+export const createInitAthlete = createAsyncThunk<
+    APIResponseType<AthleteType>,
+    AthleteInitFormValues,
+    {
+        rejectValue: string;
+    }
+>('athlete/createInitAthlete', async (data, { dispatch, rejectWithValue }) => {
+    try {
+        dispatch(isLoading(true));
+        const result = await axios.post<APIResponseType<AthleteType>>(`${URL_HOST}/athlete/init`, data);
+        dispatch(getAllAthletes());
+        return result.data;
+    } catch (err) {
+        const error: AxiosError = err as AxiosError;
+        return rejectWithValue(error.message || 'Failed to create athlete');
+    } finally {
+        dispatch(isLoading(false));
+    }
+});

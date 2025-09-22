@@ -180,3 +180,8 @@ export type Exercise = {
     createdAt: Date; // Dates usually come as ISO Dates in JSON
     updatedAt: Date;
 };
+
+export type APIResponseType<T> = {
+    message: string;
+    result: T;
+};

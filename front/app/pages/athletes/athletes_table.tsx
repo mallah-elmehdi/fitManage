@@ -11,7 +11,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { MoreHorizontal, Plus } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
@@ -94,13 +94,17 @@ export const columns: ColumnDef<AthleteType>[] = [
 ];
 
 const AthletesTable = () => {
+    const dispatch = useAppDispatch();
+
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-    const dispatch = useAppDispatch();
     const { athletes } = useAppSelector((state) => state.athlete);
-    const { is_loading } = useAppSelector((state) => state.loader);
+
+    const [open, setOpen] = useState(false);
+    const handleDialogOpen = () => setOpen(true);
+    const handleDialogClose = () => setOpen(false);
 
     const table = useReactTable({
         data: athletes,
@@ -132,7 +136,7 @@ const AthletesTable = () => {
     return (
         <div className="w-full">
             <div className="flex items-center py-4 gap-2 sm:flex-row-reverse flex-col">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger className="ml-auto">
                         <Button variant="outline">
                             <Plus /> Add Athlete
@@ -143,7 +147,7 @@ const AthletesTable = () => {
                             <DialogTitle>Add the athlete information</DialogTitle>
                             <DialogDescription>these are the basic info of the athlete</DialogDescription>
                         </DialogHeader>
-                        <AddAthleteForm />
+                        <AddAthleteForm handleDialogClose={handleDialogClose} />
                     </DialogContent>
                 </Dialog>
 

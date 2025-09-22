@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -7,6 +6,8 @@ import { Button } from '~/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
+import { createInitAthlete } from '~/context/api/athleteApi';
+import { useAppDispatch } from '~/hooks/use-redux';
 import { GENDER } from '~/lib/enums';
 
 const formSchema = z.object({
@@ -17,41 +18,37 @@ const formSchema = z.object({
     phone: z.string().nonempty().regex(/^\d+$/, {
         message: 'Must contain only digits',
     }),
-    age: z.string().nonempty().regex(/^\d+$/, {
-        message: 'Must contain only digits',
-    }),
+    age: z.number().min(0),
     gender: z.enum(Object.keys(GENDER)),
 });
 
-type AthleteFormValues = z.infer<typeof formSchema>;
+export type AthleteInitFormValues = z.infer<typeof formSchema>;
 
-export function AddAthleteForm() {
-    // 1. Define your form.
-    const form = useForm<AthleteFormValues>({
+export function AddAthleteForm({ handleDialogClose }: { handleDialogClose: () => void }) {
+    const dispatch = useAppDispatch();
+
+    const form = useForm<AthleteInitFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: '',
             email: '',
             phone: '',
-            age: '',
+            age: undefined,
             gender: undefined,
         },
     });
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        axios
-            .post('http://localhost:9090/athlete/init', { ...values, age: parseInt(values.age) })
-            .then((response) => {
-                toast.success(response.data.message);
-                setTimeout(() => {
-                    document.location.reload();
-                }, 1000);
+        dispatch(createInitAthlete({ ...values, age: values.age }))
+            .unwrap()
+            .then((result) => {
+                handleDialogClose();
+                toast.success(result.message);
             })
             .catch((error) => {
-                toast.error(error.message);
-            })
-            .finally(() => {});
+                toast.error(error?.message || 'Failed to create athlete');
+            });
     }
 
     return (
@@ -103,7 +100,12 @@ export function AddAthleteForm() {
                         <FormItem>
                             <FormLabel>Age</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your age" {...field} />
+                                <Input
+                                    type="number"
+                                    placeholder="Enter your age"
+                                    {...field}
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
