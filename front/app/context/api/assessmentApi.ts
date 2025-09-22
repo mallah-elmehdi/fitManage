@@ -19,7 +19,7 @@ export const createAssessment = createAsyncThunk<
         return result.data;
     } catch (err) {
         const error: AxiosError = err as AxiosError;
-        return rejectWithValue(error.message || 'Failed to create athlete');
+        return rejectWithValue(error.message || 'Failed to create assessment');
     } finally {
         dispatch(isLoading(false));
     }

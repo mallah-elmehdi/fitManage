@@ -84,7 +84,6 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
         },
     });
 
-    // 2. Define a submit handler.
     function onSubmit(values: AssessmentFormValues) {
         dispatch(createAssessment({ data: { ...values, athleteId: parseInt(athleteId || '-1') }, athleteId: athleteId || '' }))
             .unwrap()
@@ -96,41 +95,6 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
                 toast.error(error?.message || 'Failed to create athlete');
             });
     }
-
-    // function onSubmit(values: AssessmentFormValues) {
-    //     axios
-    //         .post('http://localhost:9090/assessment', {
-    //             athleteId: parseInt(athleteId || '0'),
-    //             ...values,
-    //             // Convert strings -> numbers
-    //             // --
-    //             weight: values.weight ? parseFloat(values.weight) : null,
-    //             body_fat: values.body_fat ? parseFloat(values.body_fat) : null,
-    //             resting_heart_rate: values.resting_heart_rate ? parseInt(values.resting_heart_rate) : null,
-    //             vo2_max: values.vo2_max ? parseFloat(values.vo2_max) : null,
-    //             blood_pressure_systolic: values.blood_pressure_systolic ? parseInt(values.blood_pressure_systolic) : null,
-    //             blood_pressure_diastolic: values.blood_pressure_diastolic ? parseInt(values.blood_pressure_diastolic) : null,
-    //             // --
-    //             push_up_1_minute_test: values.push_up_1_minute_test ? parseInt(values.push_up_1_minute_test) : null,
-    //             bench_press_one_rep_maximum_strength: values.bench_press_one_rep_maximum_strength
-    //                 ? parseFloat(values.bench_press_one_rep_maximum_strength)
-    //                 : null,
-    //             vertical_jump_reach: values.vertical_jump_reach ? parseFloat(values.vertical_jump_reach) : null,
-    //             long_jump_distance: values.long_jump_distance ? parseFloat(values.long_jump_distance) : null,
-    //             lower_extremity_functional_duration: values.lower_extremity_functional_duration
-    //                 ? parseFloat(values.lower_extremity_functional_duration)
-    //                 : null,
-    //             the_40_yard_dash_duration: values.the_40_yard_dash_duration ? parseFloat(values.the_40_yard_dash_duration) : null,
-    //             pro_shuttle_duration: values.pro_shuttle_duration ? parseFloat(values.pro_shuttle_duration) : null,
-    //         })
-    //         .then((res) => {
-    //             toast.success(res.data.message);
-    //             setTimeout(() => {
-    //                 document.location.reload();
-    //             }, 1000);
-    //         })
-    //         .catch((err) => toast.error(err.message));
-    // }
 
     return (
         <Form {...form}>
@@ -254,6 +218,7 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
 
                             <FormControl>
                                 <MultiSelect
+                                    hideSelectAll
                                     options={Object.entries(STATIC_POSTURE_DISTORTION).map(([value, label]) => ({
                                         label,
                                         value,
@@ -278,6 +243,7 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
 
                             <FormControl>
                                 <MultiSelect
+                                    hideSelectAll
                                     options={Object.entries(OVERHEAD_SQUAT_POSTURE_DISTORTION).map(([value, label]) => ({
                                         label,
                                         value,
@@ -302,6 +268,7 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
 
                             <FormControl>
                                 <MultiSelect
+                                    hideSelectAll
                                     options={Object.entries(PUSHING_PULLING_POSTURE_DISTORTION).map(([value, label]) => ({
                                         label,
                                         value,
@@ -326,6 +293,7 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
 
                             <FormControl>
                                 <MultiSelect
+                                    hideSelectAll
                                     options={Object.entries(PUSHING_PULLING_POSTURE_DISTORTION).map(([value, label]) => ({
                                         label,
                                         value,
@@ -350,6 +318,7 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
 
                             <FormControl>
                                 <MultiSelect
+                                    hideSelectAll
                                     options={Object.entries(SINGLE_SQUAT_POSTURE_DISTORTION).map(([value, label]) => ({
                                         label,
                                         value,

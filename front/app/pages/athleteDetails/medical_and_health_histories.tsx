@@ -11,7 +11,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, Trash } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'sonner';
 import { Badge } from '~/components/ui/badge';
@@ -145,6 +145,9 @@ const MedicalAndHealthHistories = () => {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
+    const [open, setOpen] = useState(false);
+    const handleDialogClose = () => setOpen(false);
+
     const table = useReactTable({
         data: athlete?.medical_and_health_histories || [],
         columns,
@@ -167,7 +170,7 @@ const MedicalAndHealthHistories = () => {
     return (
         <div className="w-full">
             <div className="flex items-center py-4 gap-2 sm:flex-row-reverse flex-col">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger className="ml-auto">
                         <Button variant="outline">
                             <Plus /> Add Medical And Health History Form
@@ -178,7 +181,7 @@ const MedicalAndHealthHistories = () => {
                             <DialogTitle>Add the medical and health history form details</DialogTitle>
                             <DialogDescription>these are the basic info of the athlete</DialogDescription>
                         </DialogHeader>
-                        <AddMedicalAndHealthHistoryForm />
+                        <AddMedicalAndHealthHistoryForm handleDialogClose={handleDialogClose} />
                     </DialogContent>
                 </Dialog>
             </div>
