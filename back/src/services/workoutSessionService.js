@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getYearStart } from '../utils/func';
+import { getMonthStart, getYearStart } from '../utils/func';
 
 const prisma = new PrismaClient();
 
@@ -29,6 +29,19 @@ const getWorkoutSessionByIdService = async (id) => {
     }
 };
 
+const getWorkoutSessionByDateService = async (date, athleteId) => {
+    try {
+        return await prisma.workoutSession.findFirst({
+            where: {
+                date,
+                athleteId,
+            },
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getAllWorkoutsByAthleteIdService = async (athleteId) => {
     try {
         return await prisma.workoutSession.findMany({
@@ -46,7 +59,36 @@ const getAllWorkoutsByAthleteIdService = async (athleteId) => {
                 microcycle: {
                     include: {
                         mesocycle: {
-                            include: 'macrocycle',
+                            include: { macrocycle: true },
+                        },
+                    },
+                },
+            },
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+
+const getAllWorkoutSessionsService = async ({ monthIndex }) => {
+    try {
+        return await prisma.workoutSession.findMany({
+            where: {
+                microcycle: {
+                    mesocycle: {
+                        macrocycle: {
+                            start_date: getYearStart(new Date()),
+                        },
+                        start_date: getMonthStart(new Date().setMonth(parseInt(monthIndex))),
+                    },
+                },
+            },
+            include: {
+                athlete: true,
+                microcycle: {
+                    include: {
+                        mesocycle: {
+                            include: { macrocycle: true },
                         },
                     },
                 },
@@ -61,4 +103,6 @@ export default {
     createWorkoutSessionService,
     getAllWorkoutsByAthleteIdService,
     getWorkoutSessionByIdService,
+    getAllWorkoutSessionsService,
+    getWorkoutSessionByDateService,
 };

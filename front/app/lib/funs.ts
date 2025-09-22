@@ -71,7 +71,55 @@ export function getMonthDaysIndex(monthIndex: number) {
     return result;
 }
 
+export function getMonthWeeks(monthIndex: number) {
+    const year = new Date().getFullYear();
+
+    const firstDay = new Date(year, monthIndex, 1);
+    const lastDay = new Date(year, monthIndex + 1, 0);
+
+    const weeks: number[][] = [];
+    let currentWeek: number[] = [];
+
+    // Adjust so that Monday = 0, Sunday = 6
+    const firstDayIndex = (firstDay.getDay() + 6) % 7;
+
+    // Fill empty slots before first day
+    for (let i = 0; i < firstDayIndex; i++) {
+        currentWeek.push(-1);
+    }
+
+    // Fill actual days
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        currentWeek.push(day);
+
+        if (currentWeek.length === 7) {
+            weeks.push(currentWeek);
+            currentWeek = [];
+        }
+    }
+
+    // Fill remaining slots
+    while (currentWeek.length < 7 && currentWeek.length > 0) {
+        currentWeek.push(-1);
+    }
+    if (currentWeek.length) {
+        weeks.push(currentWeek);
+    }
+
+    return weeks;
+}
+
 export function getDaysInMonthByIndex(monthIndex: number) {
     const year = new Date().getFullYear();
     return new Date(year, monthIndex + 1, 0).getDate();
+}
+
+export function findIndex2D(arr: number[][], target: number): [number, number] {
+    for (let i = 0; i < arr.length; i++) {
+        const j = arr[i].indexOf(target);
+        if (j !== -1) {
+            return [i, j]; // row index, column index
+        }
+    }
+    return [-1, -1]; // not found
 }

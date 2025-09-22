@@ -10,11 +10,12 @@ const createMicroCycleService = async (data) => {
     }
 };
 
-const getMicroCycleByStartDateService = async (date) => {
+const getMicroCycleByStartDateService = async (date, athleteId) => {
     try {
         return await prisma.microCycle.findUnique({
             where: {
                 start_date: date,
+                athleteId: athleteId,
             },
         });
     } catch (error) {

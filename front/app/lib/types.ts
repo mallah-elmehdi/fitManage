@@ -117,6 +117,7 @@ export type WorkoutSessionType = {
     date: Date;
 
     athleteId: number;
+    athlete: AthleteType;
     microcycleId: number;
     microcycle: MicroCycleType;
 

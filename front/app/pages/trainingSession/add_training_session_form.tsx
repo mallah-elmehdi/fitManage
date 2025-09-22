@@ -58,7 +58,8 @@ function AddTrainingSessionForm() {
                 setTimeout(() => {
                     document.location.reload();
                 }, 1000);
-            });
+            })
+            .catch((err) => toast.error(err.message));
     }
 
     return (

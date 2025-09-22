@@ -10,11 +10,12 @@ const createMesoCycleService = async (data) => {
     }
 };
 
-const getMesoCycleByStartDateService = async (date) => {
+const getMesoCycleByStartDateService = async (date, athleteId) => {
     try {
         return await prisma.mesoCycle.findUnique({
             where: {
                 start_date: date,
+                athleteId: athleteId,
             },
         });
     } catch (error) {

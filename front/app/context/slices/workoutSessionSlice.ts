@@ -1,23 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WorkoutSessionType } from '~/lib/types';
-import { getWorkoutSessionById } from '../api/workoutSession';
+import { getAllWorkoutSessions, getWorkoutSessionById } from '../api/workoutSession';
 
 export interface WorkoutSessionState {
     workoutSession: WorkoutSessionType | null;
+    workoutSessions: WorkoutSessionType[];
 }
 
 const initialState: WorkoutSessionState = {
     workoutSession: null,
+    workoutSessions: [],
 };
 
 const workoutSessionSlice = createSlice({
-    name: 'athlete',
+    name: 'workingSession',
     initialState: initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getWorkoutSessionById.fulfilled, (state, { payload }: PayloadAction<WorkoutSessionType | null>) => {
-            state.workoutSession = payload;
-        });
+        builder
+            .addCase(getWorkoutSessionById.fulfilled, (state, { payload }: PayloadAction<WorkoutSessionType | null>) => {
+                state.workoutSession = payload;
+            })
+            .addCase(getAllWorkoutSessions.fulfilled, (state, { payload }: PayloadAction<WorkoutSessionType[]>) => {
+                state.workoutSessions = payload;
+            });
     },
 });
 

@@ -244,8 +244,11 @@ model Athlete {
 
     WorkoutSessions WorkoutSession[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt  DateTime     @default(now())
+    updatedAt  DateTime     @updatedAt
+    MicroCycle MicroCycle[]
+    MesoCycle  MesoCycle[]
+    MacroCycle MacroCycle[]
 }
 
 // ------------------------------- THE ASSESSEMENT
@@ -405,6 +408,9 @@ model MacroCycle {
     start_date DateTime @unique
     end_date   DateTime
 
+    athlete   Athlete @relation(fields: [athleteId], references: [id])
+    athleteId Int
+
     mesocycles MesoCycle[]
 
     createdAt DateTime @default(now())
@@ -415,6 +421,9 @@ model MesoCycle {
     id         Int      @id @default(autoincrement())
     start_date DateTime @unique
     end_date   DateTime
+
+    athlete   Athlete @relation(fields: [athleteId], references: [id])
+    athleteId Int
 
     macrocycle   MacroCycle @relation(fields: [macrocycleId], references: [id])
     macrocycleId Int
@@ -429,6 +438,9 @@ model MicroCycle {
     id         Int      @id @default(autoincrement())
     start_date DateTime @unique
     end_date   DateTime
+
+    athlete   Athlete @relation(fields: [athleteId], references: [id])
+    athleteId Int
 
     mesocycle   MesoCycle @relation(fields: [mesocycleId], references: [id])
     mesocycleId Int

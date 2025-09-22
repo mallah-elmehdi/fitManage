@@ -6,7 +6,13 @@ import microCycleService from '../services/microCycleService';
 import workoutSessionService from '../services/workoutSessionService';
 import { getMonthEnd, getMonthStart, getWeekEnd, getWeekStart, getYearEnd, getYearStart } from '../utils/func';
 
-const { createWorkoutSessionService, getAllWorkoutsByAthleteIdService, getWorkoutSessionByIdService } = workoutSessionService;
+const {
+    createWorkoutSessionService,
+    getAllWorkoutsByAthleteIdService,
+    getWorkoutSessionByIdService,
+    getAllWorkoutSessionsService,
+    getWorkoutSessionByDateService,
+} = workoutSessionService;
 
 const { getMicroCycleByStartDateService, createMicroCycleService } = microCycleService;
 const { getMacroCycleByStartDateService, createMacroCycleService } = macroCycleService;
@@ -18,36 +24,47 @@ const createWorkoutSession = async (req, res, next) => {
         const startWeek = getWeekStart(req.body.date);
         const startMonth = getMonthStart(req.body.date);
         const startYear = getYearStart(req.body.date);
+
+        const athleteId = parseInt(req.body.athleteId);
+
         let microCycle;
 
-        microCycle = await getMicroCycleByStartDateService(startWeek);
+        const workoutSessionByDate = await getWorkoutSessionByDateService(req.body.date, athleteId);
+
+        if (workoutSessionByDate) throw new Error('Session is already created in this date');
+
+        microCycle = await getMicroCycleByStartDateService(startWeek, athleteId);
+
         if (!microCycle) {
-            let mesoCycle = await getMesoCycleByStartDateService(startMonth);
+            let mesoCycle = await getMesoCycleByStartDateService(startMonth, athleteId);
 
             if (!mesoCycle) {
-                let macroCycle = await getMacroCycleByStartDateService(startYear);
+                let macroCycle = await getMacroCycleByStartDateService(startYear, athleteId);
                 if (!macroCycle) {
                     macroCycle = await createMacroCycleService({
                         start_date: startYear,
                         end_date: getYearEnd(startYear),
+                        athleteId: athleteId,
                     });
                 }
                 mesoCycle = await createMesoCycleService({
                     start_date: startMonth,
                     end_date: getMonthEnd(startMonth),
                     macrocycleId: macroCycle.id,
+                    athleteId: athleteId,
                 });
             }
             microCycle = await createMicroCycleService({
                 start_date: startWeek,
                 end_date: getWeekEnd(startWeek),
                 mesocycleId: mesoCycle.id,
+                athleteId: athleteId,
             });
         }
 
         const workoutSession = await createWorkoutSessionService({
             date: req.body.date,
-            athleteId: req.body.athleteId,
+            athleteId: athleteId,
             training_level: req.body.training_level,
             training_phase: req.body.training_phase,
             microcycleId: microCycle.id,
@@ -101,8 +118,22 @@ const getWorkoutSessionById = async (req, res, next) => {
     }
 };
 
+const getAllWorkoutSessions = async (req, res, next) => {
+    try {
+        const workoutSession = await getAllWorkoutSessionsService({ ...req.query });
+
+        return res.status(StatusCodes.OK).json({
+            message: 'the workout session fetched successfully',
+            result: workoutSession,
+        });
+    } catch (error) {
+        return next(error);
+    }
+};
+
 export default {
     createWorkoutSession,
     getAllWorkoutsByAthleteId,
     getWorkoutSessionById,
+    getAllWorkoutSessions,
 };

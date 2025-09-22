@@ -11,6 +11,11 @@ export function getWeekStart(date) {
     return monday;
 }
 
+export function getDayStart(date) {
+    const givenDate = new Date(date);
+    return new Date(givenDate.getFullYear(), givenDate.getMonth(), givenDate.getDate());
+}
+
 export function getMonthStart(date) {
     const givenDate = new Date(date);
     return new Date(givenDate.getFullYear(), givenDate.getMonth(), 1);

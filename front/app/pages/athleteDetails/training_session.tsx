@@ -14,7 +14,7 @@ const TrainingSession = ({
     workoutSessionId,
     isToday,
 }: {
-    numberOfSessions: number;
+    numberOfSessions: number | string;
     workoutSessionId?: number | null;
     isToday?: boolean;
 }) => {

@@ -8,20 +8,6 @@ import TrainingSession from './training_session';
 const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const SessionRender = ({ numberOfSessions, workoutSessionId }: { numberOfSessions: number; workoutSessionId: number | null }) => {
-    return (
-        <>
-            {numberOfSessions === 0 ? (
-                <TableCell className="text-center" />
-            ) : (
-                <TableCell className="text-center">
-                    <TrainingSession workoutSessionId={workoutSessionId} numberOfSessions={numberOfSessions} />
-                </TableCell>
-            )}
-        </>
-    );
-};
-
 const MonthlyWeeklyProgram = ({ data }: { data: TrainingProgramTableType }) => {
     const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
     const [daysIndex, setDaysIndex] = useState(getMonthDaysIndex(monthIndex));
@@ -53,7 +39,7 @@ const MonthlyWeeklyProgram = ({ data }: { data: TrainingProgramTableType }) => {
                                         defaultValue={months[monthIndex]}
                                         onValueChange={(value) => setMonthIndex(months.indexOf(value))}
                                     >
-                                        <SelectTrigger className="w-[180px]">
+                                        <SelectTrigger size="sm" className="w-fit">
                                             <SelectValue placeholder="Select the month" />
                                         </SelectTrigger>
                                         <SelectContent>
