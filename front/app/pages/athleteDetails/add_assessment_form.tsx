@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
 import { toast } from 'sonner';
@@ -9,6 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '~/components/ui/input';
 import { MultiSelect } from '~/components/ui/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
+import { createAssessment } from '~/context/api/assessmentApi';
+import { useAppDispatch } from '~/hooks/use-redux';
 import {
     FITNESS_LEVEL,
     OVERHEAD_SQUAT_POSTURE_DISTORTION,
@@ -19,23 +20,14 @@ import {
 
 const assessmentSchema = z.object({
     // Basic measures
-    weight: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
-    body_fat: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
+    weight: z.number().min(0).optional(),
+    body_fat: z.number().min(0).optional(),
 
     // Vitals
-    resting_heart_rate: z.string().regex(/^\d+$/, { message: 'Must be a number' }).optional(),
-    vo2_max: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
-    blood_pressure_systolic: z.string().regex(/^\d+$/, { message: 'Must be a number' }).optional(),
-    blood_pressure_diastolic: z.string().regex(/^\d+$/, { message: 'Must be a number' }).optional(),
+    resting_heart_rate: z.number().min(0).optional(),
+    vo2_max: z.number().min(0).optional(),
+    blood_pressure_systolic: z.number().min(0).optional(),
+    blood_pressure_diastolic: z.number().min(0).optional(),
 
     // Movement Screening (arrays of enums)
     static: z.array(z.enum(Object.keys(STATIC_POSTURE_DISTORTION) as [keyof typeof STATIC_POSTURE_DISTORTION])),
@@ -45,36 +37,24 @@ const assessmentSchema = z.object({
     single_leg_squat: z.array(z.enum(Object.keys(SINGLE_SQUAT_POSTURE_DISTORTION) as [keyof typeof SINGLE_SQUAT_POSTURE_DISTORTION])),
 
     // Performance
-    push_up_1_minute_test: z.string().regex(/^\d+$/, { message: 'Must be a number' }).optional(),
-    bench_press_one_rep_maximum_strength: z.string().regex(/^\d+$/, { message: 'Must be a number' }).optional(),
-    vertical_jump_reach: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
-    long_jump_distance: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
-    lower_extremity_functional_duration: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
-    the_40_yard_dash_duration: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
-    pro_shuttle_duration: z
-        .string()
-        .regex(/^\d+(\.\d+)?$/, { message: 'Must be a number' })
-        .optional(),
+    push_up_1_minute_test: z.number().min(0).optional(),
+    bench_press_one_rep_maximum_strength: z.number().min(0).optional(),
+    vertical_jump_reach: z.number().min(0).optional(),
+    long_jump_distance: z.number().min(0).optional(),
+    lower_extremity_functional_duration: z.number().min(0).optional(),
+    the_40_yard_dash_duration: z.number().min(0).optional(),
+    pro_shuttle_duration: z.number().min(0).optional(),
 
     // Fitness level
     fitness_level: z.enum(Object.keys(FITNESS_LEVEL) as [keyof typeof FITNESS_LEVEL]),
+    // --------
+    athleteId: z.number().optional(),
 });
 
-type AssessmentFormValues = z.infer<typeof assessmentSchema>;
+export type AssessmentFormValues = z.infer<typeof assessmentSchema>;
 
-function AddAssessmentForm() {
+function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => void }) {
+    const dispatch = useAppDispatch();
     const { athleteId } = useParams();
 
     const form = useForm<AssessmentFormValues>({
@@ -104,40 +84,53 @@ function AddAssessmentForm() {
         },
     });
 
+    // 2. Define a submit handler.
     function onSubmit(values: AssessmentFormValues) {
-        axios
-            .post('http://localhost:9090/assessment', {
-                athleteId: parseInt(athleteId || '0'),
-                ...values,
-                // Convert strings -> numbers
-                // --
-                weight: values.weight ? parseFloat(values.weight) : null,
-                body_fat: values.body_fat ? parseFloat(values.body_fat) : null,
-                resting_heart_rate: values.resting_heart_rate ? parseInt(values.resting_heart_rate) : null,
-                vo2_max: values.vo2_max ? parseFloat(values.vo2_max) : null,
-                blood_pressure_systolic: values.blood_pressure_systolic ? parseInt(values.blood_pressure_systolic) : null,
-                blood_pressure_diastolic: values.blood_pressure_diastolic ? parseInt(values.blood_pressure_diastolic) : null,
-                // --
-                push_up_1_minute_test: values.push_up_1_minute_test ? parseInt(values.push_up_1_minute_test) : null,
-                bench_press_one_rep_maximum_strength: values.bench_press_one_rep_maximum_strength
-                    ? parseFloat(values.bench_press_one_rep_maximum_strength)
-                    : null,
-                vertical_jump_reach: values.vertical_jump_reach ? parseFloat(values.vertical_jump_reach) : null,
-                long_jump_distance: values.long_jump_distance ? parseFloat(values.long_jump_distance) : null,
-                lower_extremity_functional_duration: values.lower_extremity_functional_duration
-                    ? parseFloat(values.lower_extremity_functional_duration)
-                    : null,
-                the_40_yard_dash_duration: values.the_40_yard_dash_duration ? parseFloat(values.the_40_yard_dash_duration) : null,
-                pro_shuttle_duration: values.pro_shuttle_duration ? parseFloat(values.pro_shuttle_duration) : null,
+        dispatch(createAssessment({ data: { ...values, athleteId: parseInt(athleteId || '-1') }, athleteId: athleteId || '' }))
+            .unwrap()
+            .then((result) => {
+                handleDialogClose();
+                toast.success(result.message);
             })
-            .then((res) => {
-                toast.success(res.data.message);
-                setTimeout(() => {
-                    document.location.reload();
-                }, 1000);
-            })
-            .catch((err) => toast.error(err.message));
+            .catch((error) => {
+                toast.error(error?.message || 'Failed to create athlete');
+            });
     }
+
+    // function onSubmit(values: AssessmentFormValues) {
+    //     axios
+    //         .post('http://localhost:9090/assessment', {
+    //             athleteId: parseInt(athleteId || '0'),
+    //             ...values,
+    //             // Convert strings -> numbers
+    //             // --
+    //             weight: values.weight ? parseFloat(values.weight) : null,
+    //             body_fat: values.body_fat ? parseFloat(values.body_fat) : null,
+    //             resting_heart_rate: values.resting_heart_rate ? parseInt(values.resting_heart_rate) : null,
+    //             vo2_max: values.vo2_max ? parseFloat(values.vo2_max) : null,
+    //             blood_pressure_systolic: values.blood_pressure_systolic ? parseInt(values.blood_pressure_systolic) : null,
+    //             blood_pressure_diastolic: values.blood_pressure_diastolic ? parseInt(values.blood_pressure_diastolic) : null,
+    //             // --
+    //             push_up_1_minute_test: values.push_up_1_minute_test ? parseInt(values.push_up_1_minute_test) : null,
+    //             bench_press_one_rep_maximum_strength: values.bench_press_one_rep_maximum_strength
+    //                 ? parseFloat(values.bench_press_one_rep_maximum_strength)
+    //                 : null,
+    //             vertical_jump_reach: values.vertical_jump_reach ? parseFloat(values.vertical_jump_reach) : null,
+    //             long_jump_distance: values.long_jump_distance ? parseFloat(values.long_jump_distance) : null,
+    //             lower_extremity_functional_duration: values.lower_extremity_functional_duration
+    //                 ? parseFloat(values.lower_extremity_functional_duration)
+    //                 : null,
+    //             the_40_yard_dash_duration: values.the_40_yard_dash_duration ? parseFloat(values.the_40_yard_dash_duration) : null,
+    //             pro_shuttle_duration: values.pro_shuttle_duration ? parseFloat(values.pro_shuttle_duration) : null,
+    //         })
+    //         .then((res) => {
+    //             toast.success(res.data.message);
+    //             setTimeout(() => {
+    //                 document.location.reload();
+    //             }, 1000);
+    //         })
+    //         .catch((err) => toast.error(err.message));
+    // }
 
     return (
         <Form {...form}>
@@ -150,7 +143,12 @@ function AddAssessmentForm() {
                         <FormItem>
                             <FormLabel>Weight (kg)</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter weight" {...field} />
+                                <Input
+                                    placeholder="Enter weight"
+                                    {...field}
+                                    type="number"
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -163,7 +161,12 @@ function AddAssessmentForm() {
                         <FormItem>
                             <FormLabel>Body Fat (%)</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter body fat" {...field} />
+                                <Input
+                                    placeholder="Enter body fat"
+                                    {...field}
+                                    type="number"
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -176,7 +179,12 @@ function AddAssessmentForm() {
                         <FormItem>
                             <FormLabel>Resting Heart Rate</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter resting heart rate" {...field} />
+                                <Input
+                                    placeholder="Enter resting heart rate"
+                                    {...field}
+                                    type="number"
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -189,7 +197,12 @@ function AddAssessmentForm() {
                         <FormItem>
                             <FormLabel>VO2 max</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter vo2 max" {...field} />
+                                <Input
+                                    placeholder="Enter vo2 max"
+                                    {...field}
+                                    type="number"
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -202,7 +215,12 @@ function AddAssessmentForm() {
                         <FormItem>
                             <FormLabel>Blood Pressure Systolic</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter blood pressure systolic" {...field} />
+                                <Input
+                                    placeholder="Enter blood pressure systolic"
+                                    {...field}
+                                    type="number"
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -215,7 +233,12 @@ function AddAssessmentForm() {
                         <FormItem>
                             <FormLabel>Blood Pressure Diastolic</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter blood pressure diastolic" {...field} />
+                                <Input
+                                    placeholder="Enter blood pressure diastolic"
+                                    {...field}
+                                    type="number"
+                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

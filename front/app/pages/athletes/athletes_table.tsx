@@ -103,7 +103,6 @@ const AthletesTable = () => {
     const { athletes } = useAppSelector((state) => state.athlete);
 
     const [open, setOpen] = useState(false);
-    const handleDialogOpen = () => setOpen(true);
     const handleDialogClose = () => setOpen(false);
 
     const table = useReactTable({

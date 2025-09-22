@@ -11,7 +11,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { Info, MoreHorizontal, Plus, Trash } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 import { Badge } from '~/components/ui/badge';
@@ -192,6 +192,9 @@ const Assessments = () => {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
+    const [open, setOpen] = useState(false);
+    const handleDialogClose = () => setOpen(false);
+
     const table = useReactTable({
         data: athlete?.assessments || [],
         columns,
@@ -214,7 +217,7 @@ const Assessments = () => {
     return (
         <div className="w-full">
             <div className="flex items-center py-4 gap-2 sm:flex-row-reverse flex-col">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger className="ml-auto">
                         <Button variant="outline">
                             <Plus /> Add Assessment
@@ -225,7 +228,7 @@ const Assessments = () => {
                             <DialogTitle>Add the assessment details</DialogTitle>
                             <DialogDescription>these are the basic info of the athlete</DialogDescription>
                         </DialogHeader>
-                        <AddAssessmentForm />
+                        <AddAssessmentForm handleDialogClose={handleDialogClose} />
                     </DialogContent>
                 </Dialog>
             </div>

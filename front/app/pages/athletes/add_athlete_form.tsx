@@ -39,8 +39,8 @@ export function AddAthleteForm({ handleDialogClose }: { handleDialogClose: () =>
     });
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        dispatch(createInitAthlete({ ...values, age: values.age }))
+    function onSubmit(values: AthleteInitFormValues) {
+        dispatch(createInitAthlete(values))
             .unwrap()
             .then((result) => {
                 handleDialogClose();
@@ -101,9 +101,9 @@ export function AddAthleteForm({ handleDialogClose }: { handleDialogClose: () =>
                             <FormLabel>Age</FormLabel>
                             <FormControl>
                                 <Input
-                                    type="number"
                                     placeholder="Enter your age"
                                     {...field}
+                                    type="number"
                                     onChange={(e) => field.onChange(Number(e.target.value))}
                                 />
                             </FormControl>
