@@ -18,8 +18,8 @@ const exerciseJsonDBSetUp = async (req, res, next) => {
 
 const getAllExercisesWithPagination = async (req, res, next) => {
     try {
-        const { page, name } = req.query;
-        const result = await getAllExercisesWithPaginationService({ page: parseInt(page || '1'), name });
+        const { page } = req.query;
+        const result = await getAllExercisesWithPaginationService({ ...req.query, page: parseInt(page || '1') });
 
         return res.status(StatusCodes.OK).json({
             message: 'Fetched data successfully',

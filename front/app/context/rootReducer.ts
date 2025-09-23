@@ -1,14 +1,16 @@
 import { combineReducers, UnknownAction } from '@reduxjs/toolkit';
-import athleteSlice from './slices/athleteSlice';
-import loaderSlice from './slices/loaderSlice';
-import toastSlice from './slices/toastSlice';
-import workoutSessionSlice from './slices/workoutSessionSlice';
+import athlete from './slices/athleteSlice';
+import loader from './slices/loaderSlice';
+import toast from './slices/toastSlice';
+import workoutSession from './slices/workoutSessionSlice';
+import exercise from './slices/exerciseSlice';
 
 const appReducer = combineReducers({
-    athlete: athleteSlice,
-    loader: loaderSlice,
-    toast: toastSlice,
-    workoutSession: workoutSessionSlice,
+    athlete,
+    loader,
+    toast,
+    workoutSession,
+    exercise,
 });
 
 export type RootState = ReturnType<typeof appReducer>;

@@ -124,26 +124,56 @@ const exerciseJsonDBSetUpService = async () => {
     }
 };
 
-const getAllExercisesWithPaginationService = async ({ page, name }) => {
+const getAllExercisesWithPaginationService = async ({
+    page,
+    name,
+    fitness_level,
+    training_phases,
+    primary_muscles,
+    secondary_muscles,
+    focus,
+}) => {
     try {
-        const pageSize = 200;
+        const pageSize = 20;
         const skip = (page - 1) * pageSize;
+        const whereClause = {
+            name: {
+                contains: name || '',
+                mode: 'insensitive',
+            },
+            appropriate_fitness_level: fitness_level || undefined,
+            focus: focus || undefined,
+            appropriate_training_phases: training_phases
+                ? {
+                      hasEvery: training_phases.split(','),
+                  }
+                : undefined,
+            primary_muscles: primary_muscles
+                ? {
+                      hasEvery: primary_muscles.split(','),
+                  }
+                : undefined,
+            secondary_muscles: secondary_muscles
+                ? {
+                      hasEvery: secondary_muscles.split(','),
+                  }
+                : undefined,
+        };
 
         const exercises = await prisma.exerciseFormat.findMany({
-            skip: skip,
+            skip,
             take: pageSize,
-            where: {
-                name: {
-                    contains: name,
-                    mode: 'insensitive',
-                },
-            },
+            where: whereClause,
             orderBy: {
-                createdAt: 'desc', // Or any other field for consistent ordering
+                createdAt: 'desc',
             },
         });
 
-        const totalExercises = await prisma.exerciseFormat.count(); // Get total count for calculating total pages
+        const totalExercises = await prisma.exerciseFormat.count({
+            where: whereClause,
+        });
+
+        console.log('totalExercises', totalExercises);
 
         return {
             totalExercises,

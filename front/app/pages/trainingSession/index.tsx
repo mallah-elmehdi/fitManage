@@ -2,8 +2,12 @@ import Layout from '~/components/layout';
 import Title from '~/components/title';
 import { Separator } from '~/components/ui/separator';
 import AddTrainingSessionForm from './add_training_session_form';
+import { useState } from 'react';
+import { TrainingSessionType } from './add_training_session_exercise_form';
 
 const TrainingSession = () => {
+    // const [exercises, setExercises] = useState<TrainingSessionType[]>([]);
+
     return (
         <Layout>
             <div className="flex-1 flex gap-5 flex-col">

@@ -9,17 +9,15 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Calendar } from '~/components/ui/calendar';
+import { Card, CardContent } from '~/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
+import { TypographyP } from '~/components/ui/typography';
 import { cn } from '~/lib/utils';
-import { EXERCISE_TYPE, INTENSITY, TEMPO, TRAINING_LEVEL, TRAINING_PHASE } from '../../lib/enums';
-import { AllExercisesDataType } from '../exercises/exercises-list';
+import { EXERCISE_TYPE, INTENSITY, TEMPO, TRAINING_PHASE } from '../../lib/enums';
 import AddTrainingSessionExerciseForm, { TrainingSessionType } from './add_training_session_exercise_form';
-import { Separator } from '~/components/ui/separator';
-import { TypographyH1, TypographyH2, TypographyP } from '~/components/ui/typography';
-import { Card, CardContent, CardDescription } from '~/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 
 const formSchema = z.object({
     date: z.date(),
@@ -110,6 +108,7 @@ function AddTrainingSessionForm() {
                                             captionLayout="dropdown"
                                             fromYear={new Date().getFullYear()}
                                             toYear={new Date().getFullYear() + 10}
+                                            weekStartsOn={1}
                                         />
                                     </PopoverContent>
                                 </Popover>
