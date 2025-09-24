@@ -53,7 +53,7 @@ const Calendar = () => {
             for (let i = 0; i < workoutSessions.length; i++) {
                 const element = workoutSessions[i];
 
-                const dayIndex = new Date(element.date).getDate() - 1;
+                const dayIndex = new Date(element.date).getDate();
                 const [weekIndex, dateIndex] = findIndex2D(daysIndex, dayIndex);
 
                 const newState = [...initData];

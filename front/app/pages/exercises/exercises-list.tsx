@@ -154,10 +154,10 @@ const ExercisesList = () => {
 
             <TypographyP className="text-xs font-bold">Total: {exercises.totalExercises}</TypographyP>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-6 gap-3">
                 {exercises &&
                     exercises.exercises.map((exercise) => (
-                        <div className="col-span-1 ">
+                        <div className="md:col-span-2 sm:col-span-3 col-span-6">
                             <ExerciseCard exercise={exercise} />
                         </div>
                     ))}
