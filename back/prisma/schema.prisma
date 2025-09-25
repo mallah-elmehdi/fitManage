@@ -405,7 +405,7 @@ model Exercise {
 
 model MacroCycle {
     id         Int      @id @default(autoincrement())
-    start_date DateTime @unique
+    start_date DateTime
     end_date   DateTime
 
     athlete   Athlete @relation(fields: [athleteId], references: [id])
@@ -419,7 +419,7 @@ model MacroCycle {
 
 model MesoCycle {
     id         Int      @id @default(autoincrement())
-    start_date DateTime @unique
+    start_date DateTime
     end_date   DateTime
 
     athlete   Athlete @relation(fields: [athleteId], references: [id])
@@ -436,7 +436,7 @@ model MesoCycle {
 
 model MicroCycle {
     id         Int      @id @default(autoincrement())
-    start_date DateTime @unique
+    start_date DateTime
     end_date   DateTime
 
     athlete   Athlete @relation(fields: [athleteId], references: [id])

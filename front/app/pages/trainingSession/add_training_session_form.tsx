@@ -1,23 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { CalendarIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Calendar } from '~/components/ui/calendar';
-import { Card, CardContent } from '~/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
-import { TypographyP } from '~/components/ui/typography';
 import { cn } from '~/lib/utils';
-import { EXERCISE_TYPE, INTENSITY, TEMPO, TRAINING_PHASE } from '../../lib/enums';
-import AddTrainingSessionExerciseForm, { TrainingSessionType } from './add_training_session_exercise_form';
+import { TRAINING_PHASE } from '../../lib/enums';
+import { TrainingSessionType } from './add_training_session_exercise_form';
 
 const formSchema = z.object({
     date: z.date(),
@@ -26,9 +22,8 @@ const formSchema = z.object({
 
 type formValues = z.infer<typeof formSchema>;
 
-function AddTrainingSessionForm() {
+function AddTrainingSessionForm({ exercises }: { exercises: TrainingSessionType[] }) {
     const { athleteId } = useParams();
-    const [exercises, setExercises] = useState<TrainingSessionType[]>([]);
 
     const form = useForm<formValues>({
         resolver: zodResolver(formSchema),
@@ -62,20 +57,6 @@ function AddTrainingSessionForm() {
 
     return (
         <div className="space-y-5">
-            <Dialog>
-                <DialogTrigger className="ml-auto">
-                    <Button variant="outline">
-                        <Plus /> Add exercises
-                    </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Add the exercises details</DialogTitle>
-                        <DialogDescription>these are this session exercises</DialogDescription>
-                    </DialogHeader>
-                    <AddTrainingSessionExerciseForm setExercises={setExercises} />
-                </DialogContent>
-            </Dialog>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                     <FormField
@@ -141,7 +122,7 @@ function AddTrainingSessionForm() {
                         )}
                     />
 
-                    {exercises?.map((exercise) => (
+                    {/* {exercises?.map((exercise) => (
                         <Card>
                             <CardContent>
                                 <TypographyP className="text-sm font-bold">{EXERCISE_TYPE[exercise.exercise_type]}</TypographyP>
@@ -153,7 +134,7 @@ function AddTrainingSessionForm() {
                                 <TypographyP className="text-sm">intensity: {INTENSITY[exercise.intensity]}</TypographyP>
                             </CardContent>
                         </Card>
-                    ))}
+                    ))} */}
                     {/* ---------- */}
 
                     <Button type="submit">Submit</Button>

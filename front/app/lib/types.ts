@@ -124,7 +124,7 @@ export type WorkoutSessionType = {
     training_level: string; // or TrainingLevel enum if defined
     training_phase: string; // or TrainingPhase enum if defined
 
-    exercises: Exercise[]; // replace with Exercise[] type when defined
+    exercises: ExerciseType[]; // replace with Exercise[] type when defined
 
     createdAt: Date;
     updatedAt: Date;
@@ -161,7 +161,7 @@ export type MicroCycleType = {
     updatedAt: string; // or Date
 };
 
-export type Exercise = {
+export type ExerciseType = {
     id: number;
     exercise_format: ExerciseFormatType; // You'll need to define/import this type
     exerciseFormatId: number;
