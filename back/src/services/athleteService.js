@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { getYearStart } from '../utils/func';
+import muscleAnatomyController from '../controllers/muscleAnatomyController';
 
 const prisma = new PrismaClient();
 
@@ -29,6 +30,17 @@ const getAthleteByIdService = async (id) => {
                 assessments: {
                     orderBy: {
                         createdAt: 'desc',
+                    },
+                    include: {
+                        muscle_imbalances: {
+                            include: {
+                                muscle_imbalance: {
+                                    include: {
+                                        muscle_anatomy: true,
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
                 medical_and_health_histories: {

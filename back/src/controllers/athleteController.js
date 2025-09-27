@@ -32,7 +32,6 @@ const getAllAthletes = async (req, res, next) => {
 const getAthleteById = async (req, res, next) => {
     try {
         const athlete = await getAthleteByIdService(parseInt(req.params.athleteId));
-
         return res.status(StatusCodes.OK).json({
             message: 'Athlete was fetched successfully',
             result: athlete,

@@ -1,4 +1,6 @@
+// @ts-nocheck
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
 import { toast } from 'sonner';
@@ -9,10 +11,12 @@ import { Input } from '~/components/ui/input';
 import { MultiSelect } from '~/components/ui/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { createAssessment } from '~/context/api/assessmentApi';
-import { useAppDispatch } from '~/hooks/use-redux';
+import { getAllMuscleImbalances } from '~/context/api/muscleImbalanceApi';
+import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
 import {
     FITNESS_LEVEL,
     OVERHEAD_SQUAT_POSTURE_DISTORTION,
+    POSTURE_TYPE,
     PUSHING_PULLING_POSTURE_DISTORTION,
     SINGLE_SQUAT_POSTURE_DISTORTION,
     STATIC_POSTURE_DISTORTION,
@@ -56,6 +60,19 @@ export type AssessmentFormValues = z.infer<typeof assessmentSchema>;
 function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => void }) {
     const dispatch = useAppDispatch();
     const { athleteId } = useParams();
+    const { muscle_imbalances } = useAppSelector((state) => state.muscleImbalance);
+
+    useEffect(() => {
+        if (muscle_imbalances.length === 0) {
+            dispatch(getAllMuscleImbalances())
+                .unwrap()
+                .catch((error) => {
+                    toast.error(error?.message || 'Failed to fetch');
+                });
+        }
+    }, [dispatch]);
+
+    // console.log('muscle_imbalances', muscle_imbalances);
 
     const form = useForm<AssessmentFormValues>({
         resolver: zodResolver(assessmentSchema),
@@ -85,10 +102,55 @@ function AddAssessmentForm({ handleDialogClose }: { handleDialogClose: () => voi
     });
 
     function onSubmit(values: AssessmentFormValues) {
-        dispatch(createAssessment({ data: { ...values, athleteId: parseInt(athleteId || '-1') }, athleteId: athleteId || '' }))
+        const _static = muscle_imbalances.filter((muscle) => muscle.posture_type === POSTURE_TYPE.STATIC);
+        const overhead_squat = muscle_imbalances.filter((muscle) => muscle.posture_type === POSTURE_TYPE.OVERHEAD_SQUAT);
+        const pushing = muscle_imbalances.filter((muscle) => muscle.posture_type === POSTURE_TYPE.PUSHING);
+        const pulling = muscle_imbalances.filter((muscle) => muscle.posture_type === POSTURE_TYPE.PULLING);
+        const single_leg_squat = muscle_imbalances.filter((muscle) => muscle.posture_type === POSTURE_TYPE.SINGLE_SQUAT);
+
+        const data = {
+            // -------------- Basic Measures
+            weight: values.weight,
+            body_fat: values.body_fat,
+            resting_heart_rate: values.resting_heart_rate,
+            vo2_max: values.vo2_max,
+            blood_pressure_systolic: values.blood_pressure_systolic,
+            blood_pressure_diastolic: values.blood_pressure_diastolic,
+            // -------------  Performance (Optional)
+            push_up_1_minute_test: values.push_up_1_minute_test,
+            bench_press_one_rep_maximum_strength: values.bench_press_one_rep_maximum_strength,
+            vertical_jump_reach: values.vertical_jump_reach,
+            long_jump_distance: values.long_jump_distance,
+            lower_extremity_functional_duration: values.lower_extremity_functional_duration,
+            the_40_yard_dash_duration: values.the_40_yard_dash_duration,
+            pro_shuttle_duration: values.pro_shuttle_duration,
+
+            muscle_imbalances: [
+                _static.filter((item) => values.static.includes(item.name)),
+                overhead_squat.filter((item) => values.overhead_squat.includes(item.name)),
+                pushing.filter((item) => values.pushing.includes(item.name)),
+                pulling.filter((item) => values.pulling.includes(item.name)),
+                single_leg_squat.filter((item) => values.single_leg_squat.includes(item.name)),
+            ]
+                .flat(Infinity)
+                .map((m_item) => m_item.id),
+
+            // ------------ Fitness level classification
+            fitness_level: values.fitness_level,
+            athleteId: parseInt(athleteId || '-1'),
+        };
+
+        // console.log('AddAssessmentForm data', data);
+
+        dispatch(
+            createAssessment({
+                data,
+                athleteId: athleteId || '',
+            })
+        )
             .unwrap()
             .then((result) => {
-                handleDialogClose();
+                // handleDialogClose();
                 toast.success(result.message);
             })
             .catch((error) => {

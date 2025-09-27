@@ -1,0 +1,420 @@
+[
+    {
+        "name": "PES_PLANUS_DISTORTION",
+        "posture_type": "STATIC",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Gastrocnemius and soleus (calves)",
+                "image": ""
+            },
+            {
+                "name": "Adductor complex (inner thighs)",
+                "image": ""
+            },
+            {
+                "name": "Hip flexors",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Anterior and posterior tibialis",
+                "image": ""
+            },
+            {
+                "name": "Gluteus maximus and medius",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "LOWER_CROSSED",
+        "posture_type": "STATIC",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Hip flexors",
+                "image": ""
+            },
+            {
+                "name": "Lumbar extensors",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Gluteus maximus and medius",
+                "image": ""
+            },
+            {
+                "name": "Hamstrings complex",
+                "image": ""
+            },
+            {
+                "name": "Abdominals",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "UPPER_CROSSED",
+        "posture_type": "STATIC",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Pectoralis major and minor",
+                "image": ""
+            },
+            {
+                "name": "Levator scapulae and sternocleidomastoid",
+                "image": ""
+            },
+            {
+                "name": "Upper trapezius",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Middle and lower trapezius and rhomboids",
+                "image": ""
+            },
+            {
+                "name": "Deep cervical flexors",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "FEET_TURN_OUT",
+        "posture_type": "OVERHEAD_SQUAT",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Gastrocnemius and soleus (calves)",
+                "image": ""
+            },
+            {
+                "name": "Hamstrings complex",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Anterior and posterior tibialis",
+                "image": ""
+            },
+            {
+                "name": "Gluteus maximus and medius",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "KNEES_CAVE_IN",
+        "posture_type": "OVERHEAD_SQUAT",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Tensor fascia latae (TFL)",
+                "image": ""
+            },
+            {
+                "name": "Adductor complex (inner thighs)",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Gluteus maximus and medius",
+                "image": ""
+            },
+            {
+                "name": "Anterior and posterior tibialis",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "LOW_BACK_ARCHES",
+        "posture_type": "OVERHEAD_SQUAT",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Hip flexors",
+                "image": ""
+            },
+            {
+                "name": "Lumbar extensors",
+                "image": ""
+            },
+            {
+                "name": "Latissimus dorsi",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Gluteus maximus",
+                "image": ""
+            },
+            {
+                "name": "Hamstrings complex",
+                "image": ""
+            },
+            {
+                "name": "Abdominals",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "FORWARD_LEAN",
+        "posture_type": "OVERHEAD_SQUAT",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Hip flexors",
+                "image": ""
+            },
+            {
+                "name": "Gastrocnemius and soleus (calves)",
+                "image": ""
+            },
+            {
+                "name": "Rectus abdominis and external obliques",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Gluteus maximus",
+                "image": ""
+            },
+            {
+                "name": "Hamstrings complex",
+                "image": ""
+            },
+            {
+                "name": "Lumbar extensors",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "ARMS_FALL_FORWARD",
+        "posture_type": "OVERHEAD_SQUAT",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Latissimus dorsi",
+                "image": ""
+            },
+            {
+                "name": "Pectoralis major and minor",
+                "image": ""
+            },
+            {
+                "name": "Teres major",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Middle and lower trapezius and rhomboids",
+                "image": ""
+            },
+            {
+                "name": "Posterior deltoids",
+                "image": ""
+            },
+            {
+                "name": "Rotator cuff muscles",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "KNEE_CAVES_INWARD",
+        "posture_type": "SINGLE_SQUAT",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Tensor fascia latae (TFL)",
+                "image": ""
+            },
+            {
+                "name": "Adductor complex (inner thighs)",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Gluteus maximus and medius",
+                "image": ""
+            },
+            {
+                "name": "Anterior and posterior tibialis",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "LOW_BACK_ARCHES",
+        "posture_type": "PULLING",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Hip flexors",
+                "image": ""
+            },
+            {
+                "name": "Lumbar extensors",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Gluteus maximus",
+                "image": ""
+            },
+            {
+                "name": "Hamstrings complex",
+                "image": ""
+            },
+            {
+                "name": "Abdominals",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "SHOULDERS_ELEVATE",
+        "posture_type": "PULLING",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Levator scapulae",
+                "image": ""
+            },
+            {
+                "name": "Upper trapezius",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Lower trapezius",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "HEAD_JUTS_FORWARD",
+        "posture_type": "PULLING",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Levator scapulae",
+                "image": ""
+            },
+            {
+                "name": "Sternocleidomastoid",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Deep cervical flexors",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "LOW_BACK_ARCHES",
+        "posture_type": "PUSHING",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Hip flexors",
+                "image": ""
+            },
+            {
+                "name": "Lumbar extensors",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Gluteus maximus",
+                "image": ""
+            },
+            {
+                "name": "Hamstrings complex",
+                "image": ""
+            },
+            {
+                "name": "Abdominals",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "SHOULDERS_ELEVATE",
+        "posture_type": "PUSHING",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Levator scapulae",
+                "image": ""
+            },
+            {
+                "name": "Upper trapezius",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Lower trapezius",
+                "image": ""
+            }
+        ]
+    },
+    {
+        "name": "HEAD_JUTS_FORWARD",
+        "posture_type": "PUSHING",
+        "posture_image": "",
+        "image": "",
+        "overactive": [
+            {
+                "name": "Levator scapulae",
+                "image": ""
+            },
+            {
+                "name": "Sternocleidomastoid",
+                "image": ""
+            }
+        ],
+        "underactive": [
+            {
+                "name": "Deep cervical flexors",
+                "image": ""
+            }
+        ]
+    }
+]

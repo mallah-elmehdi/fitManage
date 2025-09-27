@@ -26,7 +26,7 @@ export const createAssessment = createAsyncThunk<
 });
 
 export const deleteAssessment = createAsyncThunk<
-    AssessmentType,
+    APIResponseType<AssessmentType>,
     { id: string; athleteId: string },
     {
         rejectValue: string;
@@ -34,9 +34,9 @@ export const deleteAssessment = createAsyncThunk<
 >('assessment/deleteAssessment', async ({ id, athleteId }, { dispatch, rejectWithValue }) => {
     try {
         dispatch(isLoading(true));
-        const result = await axios.delete<{ result: AssessmentType }>(`${URL_HOST}/assessment/${id}`);
+        const result = await axios.delete(`${URL_HOST}/assessment/${id}`);
         dispatch(getAthleteById(athleteId));
-        return result.data.result;
+        return result.data;
     } catch (err) {
         const error: AxiosError = err as AxiosError;
         return rejectWithValue(error.message || 'delete assessment error');

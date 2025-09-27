@@ -40,3 +40,23 @@ export const getAllExercises = createAsyncThunk<
         }
     }
 );
+
+export const jsonDbSetUpExercises = createAsyncThunk<
+    void,
+    void,
+    {
+        rejectValue: string;
+    }
+>('exercise/jsonDbSetUpExercises', async (_, { dispatch, rejectWithValue }) => {
+    try {
+        dispatch(isLoading(true));
+        await axios.post<{
+            result: AllExercisesDataType;
+        }>(`${URL_HOST}/exercise/json-db-setup`);
+    } catch (err) {
+        const error: AxiosError = err as AxiosError;
+        return rejectWithValue(error.message || 'Failed to fetch');
+    } finally {
+        dispatch(isLoading(false));
+    }
+});

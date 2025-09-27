@@ -7,4 +7,5 @@ export default [
     route('exercises', 'pages/exercises/index.tsx'),
     route('athlete/:athleteId/training-session', 'pages/trainingSession/index.tsx'),
     route('calendar', 'pages/calendar/index.tsx'),
+    route('muscle-imbalance', 'pages/muscleImbalance/index.tsx'),
 ] satisfies RouteConfig;

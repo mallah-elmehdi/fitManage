@@ -38,28 +38,55 @@ enum TrainingGoal {
     OVER_ALL_HEALTH
 }
 
-enum StaticPostureDistortion {
+// enum StaticPostureDistortion {
+//     PES_PLANUS_DISTORTION
+//     LOWER_CROSSED
+//     UPPER_CROSSED
+// }
+
+// enum PushingPullingPostureDistortion {
+//     LOW_BACK_ARCHES
+//     SHOULDERS_ELEVATE
+//     HEAD_JUTS_FORWARD
+// }
+
+// enum OverheadSquatPostureDistortion {
+//     FEET_TURN_OUT
+//     KNEES_CAVE_IN
+//     FORWARD_LEAN
+//     LOW_BACK_ARCHES
+//     ARMS_FALL_FORWARD
+// }
+
+// enum SingleSquatPostureDistortion {
+//     KNEE_CAVES_INWARD
+// }
+
+enum PostureDistortion {
     PES_PLANUS_DISTORTION
     LOWER_CROSSED
     UPPER_CROSSED
-}
-
-enum PushingPullingPostureDistortion {
     LOW_BACK_ARCHES
     SHOULDERS_ELEVATE
     HEAD_JUTS_FORWARD
-}
-
-enum OverheadSquatPostureDistortion {
     FEET_TURN_OUT
     KNEES_CAVE_IN
     FORWARD_LEAN
-    LOW_BACK_ARCHES
     ARMS_FALL_FORWARD
+    KNEE_CAVES_INWARD
 }
 
-enum SingleSquatPostureDistortion {
-    KNEE_CAVES_INWARD
+enum PostureType {
+    STATIC
+    PUSHING
+    PULLING
+    OVERHEAD_SQUAT
+    SINGLE_SQUAT
+}
+
+enum DistortionType {
+    OVERACTIVE
+    UNDERACTIVE
 }
 
 enum DegreeLevel {
@@ -269,11 +296,7 @@ model Assessment {
     blood_pressure_diastolic Int?
 
     // ------------- Movement Screening
-    static           StaticPostureDistortion[]
-    overhead_squat   OverheadSquatPostureDistortion[]
-    pushing          PushingPullingPostureDistortion[]
-    pulling          PushingPullingPostureDistortion[]
-    single_leg_squat SingleSquatPostureDistortion[]
+    muscle_imbalances AssessmentMuscleImbalance[]
 
     // -------------  Performance (Optional)
     push_up_1_minute_test                Int?
@@ -353,6 +376,47 @@ model MedicalAndHealthHistory {
 //     AssessmentId Int?        @unique
 // }
 
+model MuscleAnatomy {
+    id              Int             @id @default(autoincrement())
+    name            String          @unique
+    image           String?
+    distortion_type DistortionType?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    MuscleImbalance   MuscleImbalance @relation(fields: [muscleImbalanceId], references: [id])
+    muscleImbalanceId Int
+}
+
+model MuscleImbalance {
+    id   Int               @id @default(autoincrement())
+    name PostureDistortion
+
+    posture_type  PostureType
+    posture_image String?
+    image         String?
+
+    muscle_anatomy MuscleAnatomy[]
+    exercises      ExerciseFormat[]
+    assessments    AssessmentMuscleImbalance[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model AssessmentMuscleImbalance {
+    assessment        Assessment      @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+    assessmentId      Int
+    muscle_imbalance  MuscleImbalance @relation(fields: [muscleImbalanceId], references: [id])
+    muscleImbalanceId Int // relation scalar field (used in the `@relation` attribute above)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@id([assessmentId, muscleImbalanceId])
+}
+
 // ------------------------------- ONE SESSION BTREAKDOWN
 
 model ExerciseFormat {
@@ -377,8 +441,10 @@ model ExerciseFormat {
 
     Exercise Exercise[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt         DateTime         @default(now())
+    updatedAt         DateTime         @updatedAt
+    MuscleImbalance   MuscleImbalance? @relation(fields: [muscleImbalanceId], references: [id])
+    muscleImbalanceId Int?
 }
 
 model Exercise {

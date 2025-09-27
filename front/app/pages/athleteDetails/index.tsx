@@ -55,7 +55,7 @@ const AthleteDetails = () => {
                             <Title>TRAINING PROGRAM</Title>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                            <TrainingProgram  />
+                            <TrainingProgram />
                         </CollapsibleContent>
                     </Collapsible>
                     <Separator />

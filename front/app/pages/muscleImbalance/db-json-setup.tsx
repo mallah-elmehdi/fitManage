@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
-import { jsonDbSetUpExercises } from '~/context/api/exerciseApi';
+import { jsonDbSetUpMuscleImbalance } from '~/context/api/muscleImbalanceApi';
 import { useAppDispatch } from '~/hooks/use-redux';
 
 const DbJsonSetup = () => {
@@ -12,13 +12,14 @@ const DbJsonSetup = () => {
 
     const seUp = () => {
         if (checked)
-            dispatch(jsonDbSetUpExercises())
+            dispatch(jsonDbSetUpMuscleImbalance())
                 .unwrap()
-                .then(() => {
+                .then((result) => {
+                    toast.success(result.message);
                     setChecked(false);
                 })
                 .catch((error) => {
-                    toast.error(error?.message || 'Failed to fetch all workout sessions');
+                    toast.error(error?.message || 'Failed to set up db');
                 });
     };
 

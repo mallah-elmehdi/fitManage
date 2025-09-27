@@ -4,7 +4,16 @@ const prisma = new PrismaClient();
 
 const createAssessmentService = async (data) => {
     try {
-        return await prisma.assessment.create({ data });
+        return await prisma.assessment.create({
+            data: {
+                ...data,
+                muscle_imbalances: {
+                    create: data.muscle_imbalances.map((item) => ({
+                        muscleImbalanceId: item,
+                    })),
+                },
+            },
+        });
     } catch (error) {
         throw error;
     }

@@ -4,6 +4,7 @@ import loader from './slices/loaderSlice';
 import toast from './slices/toastSlice';
 import workoutSession from './slices/workoutSessionSlice';
 import exercise from './slices/exerciseSlice';
+import muscleImbalance from './slices/muscleImbalanceSlice';
 
 const appReducer = combineReducers({
     athlete,
@@ -11,6 +12,7 @@ const appReducer = combineReducers({
     toast,
     workoutSession,
     exercise,
+    muscleImbalance,
 });
 
 export type RootState = ReturnType<typeof appReducer>;

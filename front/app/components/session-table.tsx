@@ -4,7 +4,6 @@ import { EXERCISE_TYPE, INTENSITY, TEMPO } from '~/lib/enums';
 import { ExerciseType } from '~/lib/types';
 import ExerciseDetail from '~/pages/athleteDetails/exercise_detail';
 import { TrainingSessionType } from '~/pages/trainingSession/add_training_session_exercise_form';
-import { TypographyP } from './ui/typography';
 
 const SessionTable = ({ exercises }: { exercises: TrainingSessionType[] | ExerciseType[] }) => {
     return (

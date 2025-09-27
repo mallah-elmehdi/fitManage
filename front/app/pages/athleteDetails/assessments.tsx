@@ -24,21 +24,18 @@ import { useAppDispatch, useAppSelector } from '~/hooks/use-redux';
 import {
     FITNESS_LEVEL,
     OVERHEAD_SQUAT_POSTURE_DISTORTION,
+    POSTURE_TYPE,
     PUSHING_PULLING_POSTURE_DISTORTION,
     SINGLE_SQUAT_POSTURE_DISTORTION,
     STATIC_POSTURE_DISTORTION,
 } from '~/lib/enums';
 import { dateFormatting } from '~/lib/funs';
-import { AssessmentType } from '~/lib/types';
+import { AssessmentMuscleImbalanceType, AssessmentType } from '~/lib/types';
 import AddAssessmentForm from './add_assessment_form';
 
 export type Assessment = {
     id: number;
-    static: STATIC_POSTURE_DISTORTION[];
-    overhead_squat: OVERHEAD_SQUAT_POSTURE_DISTORTION[];
-    pushing: PUSHING_PULLING_POSTURE_DISTORTION[];
-    pulling: PUSHING_PULLING_POSTURE_DISTORTION[];
-    single_leg_squat: SINGLE_SQUAT_POSTURE_DISTORTION[];
+    muscle_imbalances: AssessmentMuscleImbalanceType[];
     fitness_level?: FITNESS_LEVEL | null;
     createdAt: string;
 };
@@ -50,16 +47,22 @@ export const columns: ColumnDef<AssessmentType>[] = [
         cell: ({ row }) => <div className="capitalize">{dateFormatting(row.getValue('createdAt'))}</div>,
     },
     {
-        accessorKey: 'static',
+        accessorKey: 'muscle_imbalances',
         header: 'Static',
         cell: ({ row }) => {
-            const _static = row.getValue('static');
-            const static_data = Array.isArray(_static) ? _static : [];
+            const muscle_imbalances: AssessmentMuscleImbalanceType[] = Array.isArray(row.getValue('muscle_imbalances'))
+                ? row.getValue('muscle_imbalances')
+                : [];
+            const static_data: AssessmentMuscleImbalanceType[] = muscle_imbalances.filter(
+                (item) => item.muscle_imbalance.posture_type === POSTURE_TYPE.STATIC
+            );
+
             return (
                 <div className="flex gap-1 wrap flex-col">
                     {static_data.length > 0
-                        ? static_data.map((item: keyof typeof STATIC_POSTURE_DISTORTION) => {
-                              return <Badge>{STATIC_POSTURE_DISTORTION[item]}</Badge>;
+                        ? static_data.map((item) => {
+                              // @ts-ignore
+                              return <Badge>{STATIC_POSTURE_DISTORTION[item.muscle_imbalance.name]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -67,16 +70,22 @@ export const columns: ColumnDef<AssessmentType>[] = [
         },
     },
     {
-        accessorKey: 'overhead_squat',
+        accessorKey: 'muscle_imbalances',
         header: 'Overhead squat',
         cell: ({ row }) => {
-            const overhead_squat = row.getValue('overhead_squat');
-            const overhead_squat_data = Array.isArray(overhead_squat) ? overhead_squat : [];
+            const muscle_imbalances: AssessmentMuscleImbalanceType[] = Array.isArray(row.getValue('muscle_imbalances'))
+                ? row.getValue('muscle_imbalances')
+                : [];
+            const static_data: AssessmentMuscleImbalanceType[] = muscle_imbalances.filter(
+                (item) => item.muscle_imbalance.posture_type === POSTURE_TYPE.OVERHEAD_SQUAT
+            );
+
             return (
                 <div className="flex gap-1 wrap flex-col">
-                    {overhead_squat_data.length > 0
-                        ? overhead_squat_data.map((item: keyof typeof OVERHEAD_SQUAT_POSTURE_DISTORTION) => {
-                              return <Badge>{OVERHEAD_SQUAT_POSTURE_DISTORTION[item]}</Badge>;
+                    {static_data.length > 0
+                        ? static_data.map((item) => {
+                              // @ts-ignore
+                              return <Badge>{OVERHEAD_SQUAT_POSTURE_DISTORTION[item.muscle_imbalance.name]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -84,16 +93,22 @@ export const columns: ColumnDef<AssessmentType>[] = [
         },
     },
     {
-        accessorKey: 'pushing',
+        accessorKey: 'muscle_imbalances',
         header: 'Pushing',
         cell: ({ row }) => {
-            const pushing = row.getValue('pushing');
-            const pushing_data = Array.isArray(pushing) ? pushing : [];
+            const muscle_imbalances: AssessmentMuscleImbalanceType[] = Array.isArray(row.getValue('muscle_imbalances'))
+                ? row.getValue('muscle_imbalances')
+                : [];
+            const static_data: AssessmentMuscleImbalanceType[] = muscle_imbalances.filter(
+                (item) => item.muscle_imbalance.posture_type === POSTURE_TYPE.PUSHING
+            );
+
             return (
                 <div className="flex gap-1 wrap flex-col">
-                    {pushing_data.length > 0
-                        ? pushing_data.map((item: keyof typeof PUSHING_PULLING_POSTURE_DISTORTION) => {
-                              return <Badge>{PUSHING_PULLING_POSTURE_DISTORTION[item]}</Badge>;
+                    {static_data.length > 0
+                        ? static_data.map((item) => {
+                              // @ts-ignore
+                              return <Badge>{PUSHING_PULLING_POSTURE_DISTORTION[item.muscle_imbalance.name]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -101,16 +116,22 @@ export const columns: ColumnDef<AssessmentType>[] = [
         },
     },
     {
-        accessorKey: 'pulling',
+        accessorKey: 'muscle_imbalances',
         header: 'Pulling',
         cell: ({ row }) => {
-            const pulling = row.getValue('pulling');
-            const pulling_data = Array.isArray(pulling) ? pulling : [];
+            const muscle_imbalances: AssessmentMuscleImbalanceType[] = Array.isArray(row.getValue('muscle_imbalances'))
+                ? row.getValue('muscle_imbalances')
+                : [];
+            const static_data: AssessmentMuscleImbalanceType[] = muscle_imbalances.filter(
+                (item) => item.muscle_imbalance.posture_type === POSTURE_TYPE.PULLING
+            );
+
             return (
                 <div className="flex gap-1 wrap flex-col">
-                    {pulling_data.length > 0
-                        ? pulling_data.map((item: keyof typeof PUSHING_PULLING_POSTURE_DISTORTION) => {
-                              return <Badge>{PUSHING_PULLING_POSTURE_DISTORTION[item]}</Badge>;
+                    {static_data.length > 0
+                        ? static_data.map((item) => {
+                              // @ts-ignore
+                              return <Badge>{PUSHING_PULLING_POSTURE_DISTORTION[item.muscle_imbalance.name]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -118,16 +139,22 @@ export const columns: ColumnDef<AssessmentType>[] = [
         },
     },
     {
-        accessorKey: 'single_leg_squat',
+        accessorKey: 'muscle_imbalances',
         header: 'Single leg squat',
         cell: ({ row }) => {
-            const single_leg_squat = row.getValue('single_leg_squat');
-            const single_leg_squat_data = Array.isArray(single_leg_squat) ? single_leg_squat : [];
+            const muscle_imbalances: AssessmentMuscleImbalanceType[] = Array.isArray(row.getValue('muscle_imbalances'))
+                ? row.getValue('muscle_imbalances')
+                : [];
+            const static_data: AssessmentMuscleImbalanceType[] = muscle_imbalances.filter(
+                (item) => item.muscle_imbalance.posture_type === POSTURE_TYPE.SINGLE_SQUAT
+            );
+
             return (
                 <div className="flex gap-1 wrap flex-col">
-                    {single_leg_squat_data.length > 0
-                        ? single_leg_squat_data.map((item: keyof typeof SINGLE_SQUAT_POSTURE_DISTORTION) => {
-                              return <Badge>{SINGLE_SQUAT_POSTURE_DISTORTION[item]}</Badge>;
+                    {static_data.length > 0
+                        ? static_data.map((item) => {
+                              // @ts-ignore
+                              return <Badge>{SINGLE_SQUAT_POSTURE_DISTORTION[item.muscle_imbalance.name]}</Badge>;
                           })
                         : '-'}
                 </div>
@@ -154,6 +181,9 @@ export const columns: ColumnDef<AssessmentType>[] = [
             const handler = () => {
                 dispatch(deleteAssessment({ id: id + '', athleteId: athleteId + '' }))
                     .unwrap()
+                    .then((result) => {
+                        toast.success(result.message);
+                    })
                     .catch((error) => {
                         toast.error(error?.message || 'Failed to fetch athlete');
                     });

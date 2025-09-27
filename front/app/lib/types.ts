@@ -1,5 +1,6 @@
 import {
     CHRONIC_DISEASE_TYPE,
+    DISTORTION_TYPE,
     EQUIPMENT,
     EXERCISE_MECHANIC,
     EXERCISE_TYPE,
@@ -9,11 +10,9 @@ import {
     INTENSITY,
     MEDICATION_TYPE,
     MUSCLE,
-    OVERHEAD_SQUAT_POSTURE_DISTORTION,
     PLANE_OF_MOTION,
-    PUSHING_PULLING_POSTURE_DISTORTION,
-    SINGLE_SQUAT_POSTURE_DISTORTION,
-    STATIC_POSTURE_DISTORTION,
+    POSTURE_DISTORTION,
+    POSTURE_TYPE,
     SURGERY_TYPE,
     TEMPO,
     TRAINING_FOCUS,
@@ -63,40 +62,95 @@ export type AthleteType = {
     // updatedAt: Date;
 };
 
+// export type AssessmentType = {
+//     id: number;
+//     athleteId?: number | null;
+
+//     // Basic Measures
+//     weight?: number | null;
+//     body_fat?: number | null;
+
+//     // Vitals
+//     resting_heart_rate?: number | null;
+//     vo2_max?: number | null;
+//     blood_pressure_systolic?: number | null;
+//     blood_pressure_diastolic?: number | null;
+
+//     // Movement Screening
+//     static: STATIC_POSTURE_DISTORTION[];
+//     overhead_squat: OVERHEAD_SQUAT_POSTURE_DISTORTION[];
+//     pushing: PUSHING_PULLING_POSTURE_DISTORTION[];
+//     pulling: PUSHING_PULLING_POSTURE_DISTORTION[];
+//     single_leg_squat: SINGLE_SQUAT_POSTURE_DISTORTION[];
+
+//     // Performance
+//     push_up_1_minute_test?: number | null;
+//     bench_press_one_rep_maximum_strength?: number | null;
+//     vertical_jump_reach?: number | null;
+//     long_jump_distance?: number | null;
+//     lower_extremity_functional_duration?: number | null;
+//     the_40_yard_dash_duration?: number | null;
+//     pro_shuttle_duration?: number | null;
+
+//     fitness_level: FITNESS_LEVEL;
+
+//     createdAt: Date;
+//     updatedAt: Date;
+// };
+
+export interface MuscleAnatomyType {
+    id: number;
+    name: string;
+    image?: string;
+    distortion_type?: DISTORTION_TYPE;
+    createdAt: string; // ISO date string
+    updatedAt: string;
+    muscleImbalanceId?: number;
+    MuscleImbalance?: MuscleImbalanceType; // optional relation
+}
+
+export interface MuscleImbalanceType {
+    id: number;
+    name: POSTURE_DISTORTION;
+    posture_type: POSTURE_TYPE;
+    image?: string;
+    muscle_anatomy: MuscleAnatomyType[];
+    exercises: ExerciseFormatType[];
+    assessmentId?: number;
+    Assessment?: AssessmentType;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export type AssessmentMuscleImbalanceType = {
+    assessmentId: number;
+    muscleImbalanceId: number;
+    createdAt: string; // or Date
+    updatedAt: string; // or Date
+    muscle_imbalance: MuscleImbalanceType;
+    assessment: AssessmentType;
+};
+
 export type AssessmentType = {
     id: number;
-    athleteId?: number | null;
-
-    // Basic Measures
-    weight?: number | null;
-    body_fat?: number | null;
-
-    // Vitals
-    resting_heart_rate?: number | null;
-    vo2_max?: number | null;
-    blood_pressure_systolic?: number | null;
-    blood_pressure_diastolic?: number | null;
-
-    // Movement Screening
-    static: STATIC_POSTURE_DISTORTION[];
-    overhead_squat: OVERHEAD_SQUAT_POSTURE_DISTORTION[];
-    pushing: PUSHING_PULLING_POSTURE_DISTORTION[];
-    pulling: PUSHING_PULLING_POSTURE_DISTORTION[];
-    single_leg_squat: SINGLE_SQUAT_POSTURE_DISTORTION[];
-
-    // Performance
-    push_up_1_minute_test?: number | null;
-    bench_press_one_rep_maximum_strength?: number | null;
-    vertical_jump_reach?: number | null;
-    long_jump_distance?: number | null;
-    lower_extremity_functional_duration?: number | null;
-    the_40_yard_dash_duration?: number | null;
-    pro_shuttle_duration?: number | null;
-
+    athleteId?: number;
+    weight?: number;
+    body_fat?: number;
+    resting_heart_rate?: number;
+    vo2_max?: number;
+    blood_pressure_systolic?: number;
+    blood_pressure_diastolic?: number;
+    push_up_1_minute_test?: number;
+    bench_press_one_rep_maximum_strength?: number;
+    vertical_jump_reach?: number;
+    long_jump_distance?: number;
+    lower_extremity_functional_duration?: number;
+    the_40_yard_dash_duration?: number;
+    pro_shuttle_duration?: number;
     fitness_level: FITNESS_LEVEL;
-
-    createdAt: Date;
-    updatedAt: Date;
+    muscle_imbalances: AssessmentMuscleImbalanceType[];
+    createdAt: string; // or Date
+    updatedAt: string; // or Date
 };
 
 export type MedicalAndHealthHistoryType = {

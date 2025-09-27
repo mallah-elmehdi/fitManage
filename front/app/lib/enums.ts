@@ -74,7 +74,7 @@ export enum TRAINING_GOAL {
     OVER_ALL_HEALTH = 'Overall Health',
 }
 
-// ✅ Static Posture Distortion
+// // ✅ Static Posture Distortion
 export enum STATIC_POSTURE_DISTORTION {
     PES_PLANUS_DISTORTION = 'Pes Planus Distortion (Flat Feet)',
     LOWER_CROSSED = 'Lower Crossed Syndrome',
@@ -100,6 +100,33 @@ export enum OVERHEAD_SQUAT_POSTURE_DISTORTION {
 // ✅ Single Leg Squat Posture Distortion
 export enum SINGLE_SQUAT_POSTURE_DISTORTION {
     KNEE_CAVES_INWARD = 'Knee Caves Inward',
+}
+
+export enum POSTURE_DISTORTION {
+    PES_PLANUS_DISTORTION = 'Pes Planus Distortion (Flat Feet)',
+    LOWER_CROSSED = 'Lower Crossed Syndrome',
+    UPPER_CROSSED = 'Upper Crossed Syndrome',
+    LOW_BACK_ARCHES = 'Low Back Arches',
+    SHOULDERS_ELEVATE = 'Shoulders Elevate',
+    HEAD_JUTS_FORWARD = 'Head Juts Forward',
+    FEET_TURN_OUT = 'Feet Turn Out',
+    KNEES_CAVE_IN = 'Knees Cave In',
+    FORWARD_LEAN = 'Forward Lean',
+    ARMS_FALL_FORWARD = 'Arms Fall Forward',
+    KNEE_CAVES_INWARD = 'Knee Caves Inward',
+}
+
+export enum POSTURE_TYPE {
+    STATIC = 'STATIC',
+    PUSHING = 'PUSHING',
+    PULLING = 'PULLING',
+    OVERHEAD_SQUAT = 'OVERHEAD_SQUAT',
+    SINGLE_SQUAT = 'SINGLE_SQUAT',
+}
+
+export enum DISTORTION_TYPE {
+    OVERACTIVE = 'overactive',
+    UNDERACTIVE = 'underactive',
 }
 
 // ✅ Degree Level

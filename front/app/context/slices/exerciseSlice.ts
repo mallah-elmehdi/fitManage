@@ -11,6 +11,7 @@ const initialState: ExerciseState = {
         exercises: [],
         currentPage: 1,
         totalPages: 0,
+        totalExercises: 0,
     },
 };
 

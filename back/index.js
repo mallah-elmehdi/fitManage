@@ -8,6 +8,8 @@ import assessmentRouter from './src/routes/assessmentRouter';
 import medicalAndHealthHistoryRouter from './src/routes/medicalAndHealthHistoryRouter';
 import exerciseRouter from './src/routes/exerciseRouter';
 import workoutSessionRouter from './src/routes/workoutSessionRouter';
+import muscleAnatomyRouter from './src/routes/muscleAnatomyRouter';
+import muscleImbalanceRouter from './src/routes/muscleImbalanceRouter';
 import error from './src/middlewares/errorHandler';
 
 // APPLICATION
@@ -23,6 +25,9 @@ app.use('/assessment', assessmentRouter);
 app.use('/medical-and-health-history', medicalAndHealthHistoryRouter);
 app.use('/exercise', exerciseRouter);
 app.use('/workout-session', workoutSessionRouter);
+app.use('/muscle-anatomy', muscleAnatomyRouter);
+app.use('/muscle-imbalance', muscleImbalanceRouter);
+
 
 // ERROR HANDLER
 const { errorHandler } = error;
